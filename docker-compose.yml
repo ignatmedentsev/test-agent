@@ -1,0 +1,26 @@
+version: "3.1"
+services:
+  agent:
+    image: nanoxmarketplace/agent:1.0.0
+    build:
+      context: .
+      args:
+        - NODE_VERSION=18.15.0-focal
+    ports:
+      - "3005:3005"
+      - "3006:3006"
+      - "9999:9999"
+    volumes:
+      - agent_data:/app/data
+    restart: always
+    secrets:
+      - source: agent-config
+        target: /app/data/config.json
+
+
+secrets:
+  agent-config:
+    file: ./data/config.json
+
+volumes:
+  agent_data:

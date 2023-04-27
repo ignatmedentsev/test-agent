@@ -1,0 +1,78 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "~desktop": [
+        "apps/desktop-agent/src"
+      ],
+      "~desktop/*": [
+        "apps/desktop-agent/src/*"
+      ],
+      "~render/*": [
+        "apps/render/app/*"
+      ],
+      "~common": [
+        "libs/common/src"
+      ],
+      "~common/*": [
+        "libs/common/src/*"
+      ],
+      "~core": [
+        "libs/core/src"
+      ],
+      "~core/*": [
+        "libs/core/src/*"
+      ],
+      "~agent": [
+        "libs/agent/src"
+      ],
+      "~agent/*": [
+        "libs/agent/src/*"
+      ],
+      "~electron": [
+        "libs/electron/src"
+      ],
+      "~electron/*": [
+        "libs/electron/src/*"
+      ]
+    },
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "isolatedModules": true,
+    "sourceMap": true,
+    "removeComments": true,
+    "importHelpers": true,
+    "downlevelIteration": true,
+    "newLine": "LF",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "allowUnusedLabels": true,
+    "allowUnreachableCode": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "useDefineForClassFields": false
+  }
+}

@@ -1,0 +1,11 @@
+*.log
+.env
+.git
+.vscode
+/.angural
+config.json
+data
+dist
+kubernetes
+node_modules
+release

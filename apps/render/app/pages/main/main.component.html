@@ -1,0 +1,16 @@
+<div class="main">
+  <div class="main-container">
+    <div class="logo" (click)="openBaseUrl()"></div>
+
+    <div class="login-form">
+      <form>
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Enter agent key to start</mat-label>
+          <input matInput [value]="agentKey" (input)="changeAgentKey($event)">
+        </mat-form-field>
+      </form>
+    </div>
+    <button mat-raised-button color="primary" (click)="authAgentKey()">Login</button>
+  </div>
+</div>
+

@@ -1,0 +1,39 @@
+{
+  "appId": "io.mdw",
+  "productName": "Marketplace-Agent",
+  "asar": true,
+  "directories": {
+    "output": "release",
+    "buildResources": "resources"
+  },
+  "asarUnpack": [ "**/node_modules/sharp/**/*" ],
+  "publish": {
+    "provider": "github",
+    "private": false,
+    "token": "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"
+  },
+  "artifactName": "Marketplace-Agent.${ext}",
+  "files": [
+    "!*.ts",
+    "!*.json",
+    "!*.png",
+    "package.json",
+    "config.json",
+    {
+      "from": "./dist/",
+      "filter": ["!*.map"]
+    }
+  ],
+  "linux": {
+    "category": "Utility",
+    "target": "AppImage",
+    "icon": "./dist/apps/desktop-agent/src/assets/images/app-icon.png"
+  },
+  "win": {
+    "target": "nsis",
+    "icon": "./dist/apps/desktop-agent/src/assets/images/app-icon.png"
+  },
+  "mac": {
+    "icon": "./dist/apps/desktop-agent/src/assets/images/app-icon.png"
+  }
+}

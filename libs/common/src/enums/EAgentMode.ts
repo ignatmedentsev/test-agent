@@ -1,0 +1,4 @@
+export enum EAgentMode {
+  STANDALONE = 'STANDALONE',
+  KUBERNETES = 'KUBERNETES',
+}

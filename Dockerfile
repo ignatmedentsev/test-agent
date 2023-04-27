@@ -1,0 +1,80 @@
+ARG NODE_VERSION=18.15.0-focal
+
+FROM nanoxmarketplace/nodejs:${NODE_VERSION} as builder
+ARG GIT_COMMIT_HASH=''
+
+RUN set -ex; \
+  mkdir -p /app; \
+  chown -R node:node /app
+
+USER node
+WORKDIR /app
+
+COPY package.json package-lock.json /app/
+
+RUN set -ex; \
+  npm ci
+
+COPY --chown=node:node . /app/
+
+RUN set -ex; \
+  sed -i -e "s/GIT_COMMIT_HASH =.*;/GIT_COMMIT_HASH = '${GIT_COMMIT_HASH}';/g" libs/agent/src/modules/agent/agent.const.ts; \
+  npm run headless:build
+
+FROM nanoxmarketplace/nodejs:${NODE_VERSION} as release
+USER root
+
+ARG APT_PROXY=
+
+ARG DEBIAN_FRONTEND="noninteractive"
+
+RUN set -eux; \
+  # enable APT_PROXY if it has been specified
+  if [ -n "${APT_PROXY}" ];then \
+    echo "Acquire::http { Proxy \"${APT_PROXY}\"; };" > /etc/apt/apt.conf.d/01proxy; \
+  fi; \
+  # see note below about "*.pyc" files
+  export PYTHONDONTWRITEBYTECODE=1; \
+  apt-get -yyq update; \
+  apt-get -yyq install --no-install-recommends \
+    fontconfig-config \
+    fonts-dejavu-core \
+    libfontconfig1 \
+    libgraphite2-3 \
+    libharfbuzz0b \
+    libjpeg8 \
+    liblcms2-2 \
+    libpng16-16 \
+    ; \
+  apt-get clean; \
+  rm -rf /var/lib/apt/lists/*; \
+  # some of the steps above generate a lot of "*.pyc" files (and setting "PYTHONDONTWRITEBYTECODE" beforehand doesn't propagate properly for some reason), so we clean them up manually (as long as they aren't owned by a package)
+	find /usr -name '*.pyc' -type f -exec bash -c 'for pyc; do dpkg -S "$pyc" &> /dev/null || rm -vf "$pyc"; done' -- '{}' +; \
+  # disable APT_PROXY if it has been specified
+  if [ -n "${APT_PROXY}" ];then \
+    rm /etc/apt/apt.conf.d/01proxy; \
+  fi; \
+  mkdir -p /app/data; \
+  chown -R node:node /app;
+
+USER node
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+COPY package.json package-lock.json /app/
+
+RUN set -ex; \
+  npm ci --omit=dev;
+
+COPY ecosystem.config.js /app
+
+COPY --from=builder /app/dist /app/dist
+
+EXPOSE 3005 3006 9999
+VOLUME [ "/app/data" ]
+
+USER root
+
+ENTRYPOINT [ "/init" ]
+CMD [ "s6-setuidgid", "node", "export", "HOME", "/var/lib/node", "/usr/bin/npm", "--prefix", "/app", "run", "headless:pm2:start" ]

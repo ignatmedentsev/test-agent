@@ -1,0 +1,9 @@
+export enum ESysVarType {
+  ARRAY = 'ARRAY',
+  BOOLEAN = 'BOOLEAN',
+  MAP = 'MAP',
+  MULTILINE_STRING = 'MULTILINE_STRING',
+  NUMBER = 'NUMBER',
+  OBJECT = 'OBJECT',
+  STRING = 'STRING',
+}

@@ -1,0 +1,113 @@
+body {
+  font-family: 'Roboto';
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  h1 {
+    text-align: center;
+  }
+}
+
+.actions {
+  .action-btn {
+    margin: 0 10px;
+  }
+}
+
+.logo {
+  background: url('../../../assets/images/logo.svg') no-repeat center;
+  background-size: contain;
+  display: block;
+  height: 200px;
+  width: 200px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.user-info {
+  p {
+    font-size: 18px;
+  }
+  span {
+    color:#273746;
+  }
+}
+
+.login-form {
+  padding-top: 40px;
+}
+
+
+.mat-mdc-form-field {
+  width: 100%;
+  font-size: var(--app-font-size-mat-text);
+  font-weight: 400;
+  letter-spacing: normal;
+}
+input {
+  height: 41px!important;
+}
+
+.mat-mdc-input-element::placeholder {
+  color: var(--app-inactive-text-color);
+}
+
+::ng-deep .mdc-text-field:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-floating-label {
+  color: var(--ion-color-primary) !important;
+}
+
+.toggle-password-mask {
+  cursor: pointer;
+
+}
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+// This hack turns off the autofill color since it doesn't completely fill the mat-input, but only its middle part, which is not very pretty.
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: 0 0 0 30px var(--ion-background-color) inset;
+}
+
+.style-white {
+  ::ng-deep .mdc-text-field {
+    border-radius: 7px;
+    background-color: white;
+  }
+  ::ng-deep input.mat-mdc-input-element {
+    color: black !important;
+  }
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: black !important;
+  }
+}
+label.style-white {
+  color: white;
+}
+.required::after {
+  content: '*';
+  display: inline-block;
+  padding: 0 2px;
+  position: relative;
+  top: -2px;
+}

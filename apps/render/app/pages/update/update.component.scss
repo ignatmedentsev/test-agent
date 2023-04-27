@@ -1,0 +1,30 @@
+.main-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loading::after {
+    overflow: hidden;
+    display: inline-block;
+    position: absolute;
+    vertical-align: bottom;
+    animation: ellipsis steps(4, end) 900ms infinite;
+    content: '\2026';
+    width: 0;
+  }
+
+  @keyframes ellipsis {
+    to {
+      width: 40px;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+<div class="main">
+  <div class="main-container">
+    <div class="logo"></div>
+    <br>
+    <h1>Organization info</h1>
+    <mat-list *ngIf="(organizationInfo && userInfo)">
+      <mat-list-item>Name:  {{ organizationInfo.name }} </mat-list-item>
+      <mat-list-item>Email: {{ organizationInfo.email }}</mat-list-item>
+      <mat-list-item>Phone:  {{ organizationInfo.phone }} </mat-list-item>
+      <mat-list-item>Short Name: {{ organizationInfo.shortName }}</mat-list-item>
+      <mat-list-item>Timezone: {{ organizationInfo.timezone }}</mat-list-item>
+      <mat-list-item>Type: {{ organizationInfo.type }}</mat-list-item>
+      <hr>
+      <mat-list-item>User Name: {{ userInfo.firstName }}</mat-list-item>
+     </mat-list>
+</div>

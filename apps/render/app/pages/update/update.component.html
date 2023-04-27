@@ -1,0 +1,8 @@
+<div class="main-center">
+  <div *ngIf="progress !== 0; else prepareUpdate">
+    <h2 class="progress"><span>Downloading update: {{ progress }}</span> %</h2>
+  </div>
+  <ng-template #prepareUpdate>
+    <h1 class="loading">Fetching latest update</h1>
+  </ng-template>
+</div>
