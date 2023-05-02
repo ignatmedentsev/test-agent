@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
-  ) { }
+  ) {}
 
   canActivate() {
     return this.authService.isLogin() ? true : this.router.createUrlTree(['']);

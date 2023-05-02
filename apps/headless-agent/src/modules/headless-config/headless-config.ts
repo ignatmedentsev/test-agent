@@ -4,17 +4,15 @@ import util from 'util';
 
 import { platformUrls } from '~common/constants';
 import { EPacsFileUploaderType } from '~common/enums';
-import type { IConfig } from '~common/interfaces';
+import type { IHeadlessConfig } from '~common/interfaces';
 import { LogService } from '~core/log';
 
 import { HeadlessPathService } from '../headless-path';
 
 const pathService = new HeadlessPathService();
 
-const defaultAgentConfig: IConfig = {
-  apiUrl: process.env.NODE_ENV === 'dev'
-    ? platformUrls.localhost
-    : platformUrls.prod,
+const defaultAgentConfig: IHeadlessConfig = {
+  apiUrl: process.env.NODE_ENV === 'dev' ? platformUrls.localhost : platformUrls.prod,
   pacs: {
     aet: 'NANOX',
     port: 9999,
@@ -41,7 +39,6 @@ const defaultAgentConfig: IConfig = {
     retries: 3,
     retryDelay: 2000,
   },
-  autoUpdate: true,
 };
 
 export function loadConfiguration() {
@@ -82,6 +79,6 @@ function loadConfig(configPath: string) {
   }
 }
 
-function isConfig(config: unknown): config is IConfig {
+function isConfig(config: unknown): config is IHeadlessConfig {
   return !Array.isArray(config) && typeof config === 'object';
 }

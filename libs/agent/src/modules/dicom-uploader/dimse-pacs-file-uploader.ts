@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import util from 'util';
 
+import { AgentApiClientService } from '~agent/modules/agent-api-client';
 import { DicomSenderService } from '~agent/modules/dicom-sender';
 import { AgentConfigService } from '~agent/services';
-import { isHostname } from '~agent/utils/validators/isHostname';
 import type { IDicomItem, IPacsServer } from '~common/interfaces';
-import { ApiClientService } from '~core/api-client';
+import { isHostname } from '~common/utils/validators/isHostname';
 import { LogService } from '~core/log';
 
 import type { IPacsFileUploader } from './dicom-uploader.interfaces';
@@ -13,7 +13,7 @@ import type { IPacsFileUploader } from './dicom-uploader.interfaces';
 @Injectable()
 export class DimsePacsFileUploader implements IPacsFileUploader {
   constructor(
-    private readonly apiClientService: ApiClientService,
+    private readonly agentApiClientService: AgentApiClientService,
     private readonly configService: AgentConfigService,
     private readonly dicomSender: DicomSenderService,
     private readonly logger: LogService,
@@ -35,7 +35,7 @@ export class DimsePacsFileUploader implements IPacsFileUploader {
 
     try {
       const allowInsecure = this.configService.allowInsecureDimsePacsFileUpload();
-      await this.apiClientService.newPacsFileSave({ ...item.parsedDicom, skipUpdateFilledPacsFiles: !isPhiExists });
+      await this.agentApiClientService.newPacsFileSave({ ...item.parsedDicom, skipUpdateFilledPacsFiles: !isPhiExists });
       const dimseOptions = { allowInsecure, checkTls: true };
       await this.dicomSender.echo(marketplacePublicPacs, dimseOptions);
       await this.dicomSender.sendDicomFile(item.dicomFilePath, marketplacePublicPacs, dimseOptions);

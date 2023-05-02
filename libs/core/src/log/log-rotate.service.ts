@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import path from 'path';
 import util from 'util';
 
-import { PathService } from '~agent/services';
+import { CorePathService } from '~core/services';
 
 import { LogService } from './log.service';
 
@@ -16,11 +16,11 @@ export class LogRotateService {
   private readonly pathToLogs;
 
   constructor(
-    private readonly pathService: PathService,
+    private readonly corePathService: CorePathService,
     private readonly logger: LogService,
   ) {
     this.logger.setContext(this.constructor.name);
-    this.pathToLogs = this.pathService.getPathToLogs();
+    this.pathToLogs = this.corePathService.getPathToLogs();
   }
 
   public async rotateLogs() {

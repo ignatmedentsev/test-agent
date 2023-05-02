@@ -6,7 +6,7 @@ import path from 'path';
 import { combineLatest } from 'rxjs';
 
 import { AgentInitService } from '~agent/modules/agent';
-import { PathService } from '~agent/services';
+import { AgentPathService } from '~agent/services';
 import { AuthService } from '~core/auth';
 import { LogService } from '~core/log';
 import { SocketClientService } from '~core/socket';
@@ -18,7 +18,6 @@ import { UpdaterService } from './updater.service';
 export class TrayService implements OnApplicationBootstrap {
   private tray: Tray;
   private isOnline = false;
-  private isFocused = false;
   private isLoggedIn = false;
   private additionalMenuItems: Electron.MenuItemConstructorOptions[] = [];
   private imagesPath = '';
@@ -29,18 +28,6 @@ export class TrayService implements OnApplicationBootstrap {
     label: 'Quit',
     role: 'quit',
     accelerator: 'CommandOrControl+Q',
-  };
-
-  private readonly hideAppWindow: MenuItemConstructorOptions = {
-    id: 'hide',
-    label: `Hide Agent`,
-    click: () => this.electronAppService.getMainWindow()?.hide(),
-  };
-
-  private readonly showAppWindow: MenuItemConstructorOptions = {
-    id: 'open',
-    label: `Show Agent`,
-    click: () => this.electronAppService.createWindow(),
   };
 
   private readonly login: MenuItemConstructorOptions = {
@@ -67,7 +54,7 @@ export class TrayService implements OnApplicationBootstrap {
     private readonly electronAppService: ElectronAppService,
     private readonly authService: AuthService,
     private readonly socketClientService: SocketClientService,
-    private readonly pathService: PathService,
+    private readonly pathService: AgentPathService,
     private readonly agentInitService: AgentInitService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -80,12 +67,10 @@ export class TrayService implements OnApplicationBootstrap {
     combineLatest({
       isAuthenticated: this.authService.isAuth,
       isConnected: this.socketClientService.isConnected,
-      isFocused: this.electronAppService.isFocused,
     })
       .subscribe((value => {
         this.isLoggedIn = value.isAuthenticated;
         this.isOnline = value.isConnected && value.isAuthenticated;
-        this.isFocused = value.isFocused;
         this.setContextMenu();
       }));
   }
@@ -100,7 +85,6 @@ export class TrayService implements OnApplicationBootstrap {
       this.isLoggedIn ? this.logout : this.login,
       this.separatorItem,
       ...this.additionalMenuItems,
-      this.isFocused ? this.hideAppWindow : this.showAppWindow,
       this.checkUpdate,
       this.appVersion(),
       this.separatorItem,

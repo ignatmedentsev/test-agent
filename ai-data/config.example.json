@@ -1,0 +1,43 @@
+{
+  "apiUrl": "http://localhost:3000",
+  "key": "CHANGE_ME",
+  "pacs": {
+    "aet": "NANOX",
+    "port": 9999,
+    "scp": {
+      "associationTimeout": 30000,
+      "connectTimeout": 60000,
+      "pduTimeout": 30000
+    },
+    "storagePath": "CHANGE_ME"
+  },
+  "storescu": {
+    "associationTimeout": 30000,
+    "connectTimeout": 60000,
+    "pduTimeout": 30000,
+    "fragmentMultiframe": false
+  },
+  "httpRequestTimeout": 180000,
+  "httpsEnforced": false,
+  "pacsFileUploadProtocol": "HTTP",
+  "allowInsecureDimsePacsFileUpload": false,
+  "checkTlsTimeout": 10000,
+  "queues": {
+    "DICOM_UPLOADER": {
+      "log": true,
+      "maxAttempts": 3,
+      "parallelThreads": 4,
+      "processingDelay": 300,
+      "timeout": 300000
+    },
+    "DICOM_PROCESSOR": {
+      "log": true,
+      "maxAttempts": 3,
+      "parallelThreads": 4,
+      "processingDelay": 0,
+      "timeout": 300000
+    }
+  },
+  "ghostScriptPath": "LOCAL_PATH_TO_GHOSTSCRIPT",
+  "aiSendType": "PUSH"
+}

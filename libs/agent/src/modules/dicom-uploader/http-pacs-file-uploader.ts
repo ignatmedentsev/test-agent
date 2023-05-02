@@ -3,8 +3,8 @@ import FormData from 'form-data';
 import fs from 'fs';
 import util from 'util';
 
+import { AgentApiClientService } from '~agent/modules/agent-api-client';
 import type { IDicomItem } from '~common/interfaces';
-import { ApiClientService } from '~core/api-client';
 import { LogService } from '~core/log';
 
 import type { IPacsFileUploader } from './dicom-uploader.interfaces';
@@ -12,7 +12,7 @@ import type { IPacsFileUploader } from './dicom-uploader.interfaces';
 @Injectable()
 export class HttpPacsFileUploader implements IPacsFileUploader {
   constructor(
-    private readonly apiClientService: ApiClientService,
+    private readonly agentApiClientService: AgentApiClientService,
     private readonly logger: LogService,
   ) {
     logger.setContext(this.constructor.name);
@@ -32,7 +32,7 @@ export class HttpPacsFileUploader implements IPacsFileUploader {
     formData.append('dicom', fs.createReadStream(item.dicomFilePath));
 
     try {
-      await this.apiClientService.newPacsFileProcess(formData);
+      await this.agentApiClientService.newPacsFileProcess(formData);
       this.logger.info(`DICOM with sopInstanceUID: "${item.uids.sopInstanceUID}" was successfully sent to platform`);
     } catch (error) {
       throw new Error(`Error occurred while sending to platform: ${util.inspect(error)}`);

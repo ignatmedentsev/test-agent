@@ -1,22 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { AxiosInstance } from 'axios';
 import type { AxiosError } from 'axios';
-import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { AgentConfigService } from '~agent/services';
-import { AuthService } from '~core/auth';
 import { LogService } from '~core/log';
+import { CoreConfigService } from '~core/services';
 
-import { HttpApiService } from './http-api-service';
+import { HttpService } from './http-service';
 
 @Injectable()
-export class HttpRetryService extends HttpApiService {
+export abstract class HttpRetryService extends HttpService {
   constructor(
-    configService: AgentConfigService,
-    authService: AuthService,
+    configService: CoreConfigService,
     logger: LogService,
+    instance: AxiosInstance,
   ) {
-    const instance = axios.create({ baseURL: configService.getApiUrl(), timeout: configService.getHttpTimeout() });
     const retryOptions = configService.getHttpRetryOptions();
 
     axiosRetry(instance, {
@@ -26,7 +24,7 @@ export class HttpRetryService extends HttpApiService {
 
         return retryCount * retryOptions.retryDelay;
       },
-      retryCondition: async (error: AxiosError<any>) => {
+      retryCondition: (error: AxiosError<any>) => {
         const errorLog = {
           url: `${error.config?.baseURL}${error.config?.url}`,
           status: error.response?.status || '',
@@ -35,21 +33,17 @@ export class HttpRetryService extends HttpApiService {
         };
         this.logger.error(`Error from api: ${JSON.stringify(errorLog)}`);
 
-        if (errorLog.status === 401) {
-          await this.authService.logout();
-        }
-
-        // Retry only if we haven't received a response from the platform or if got 404 code
-        return !!error.response || errorLog.status === 404;
+        // Retry only if we haven't received a response from calling host
+        return !!error.response;
       },
     });
 
-    super(configService, authService, logger, instance);
+    super(configService, logger, instance);
     this.logger.setContext(this.constructor.name);
   }
 
   public override onModuleInit() {
-    this.initRequestInterceptor();
-    this.initResponseInterceptor(false);
+    this.initRequestLogInterceptor();
+    this.initResponseLogInterceptor(false);
   }
 }

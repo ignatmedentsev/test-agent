@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { AgentConfigService, PathService } from '~agent/services';
-import { HEADLESS_APP_HTTP_PORT, HEADLESS_APP_HTTPS_PORT } from '~common/constants';
+import { AgentConfigService } from '~agent/services';
+import { HEADLESS_APP_HTTPS_PORT, HEADLESS_APP_HTTP_PORT } from '~headless-app/constants';
 
 @Injectable()
 export class HeadlessConfigService extends AgentConfigService {
   constructor(
     configService: ConfigService,
-    pathService: PathService,
   ) {
-    super(configService, pathService);
+    super(configService);
     this.httpPort = HEADLESS_APP_HTTP_PORT;
     this.httpsPort = HEADLESS_APP_HTTPS_PORT;
   }

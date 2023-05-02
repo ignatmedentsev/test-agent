@@ -6,10 +6,10 @@ import { lastValueFrom } from 'rxjs';
 import type { FindOptionsWhere } from 'typeorm';
 import { In, Not } from 'typeorm';
 
-import { AgentConfigService } from '~agent/services';
 import type { EQueueType } from '~common/enums';
 import { EAgentApiUrl } from '~common/enums'; // TODO: get rid of dependency
 import { delay } from '~common/utils/delay';
+import { CoreConfigService } from '~core/services';
 
 import { NonTxDbService } from '../db';
 import { LogService } from '../log';
@@ -45,11 +45,11 @@ export class QueueService implements OnModuleInit {
     private readonly registry: QueueRegistry,
     private readonly queueRunner: QueueRunner,
     private readonly queueRepository: QueueRepository,
-    private readonly agentConfigService: AgentConfigService,
+    private readonly configService: CoreConfigService,
   ) {
     this.subscribeEvents();
     logger.setContext(this.constructor.name);
-    this.queueItemProcessEndpoint = `http://localhost:${this.agentConfigService.getHttpPort()}${EAgentApiUrl.SYS_QUEUE_ITEM_PROCESS}`;
+    this.queueItemProcessEndpoint = `http://localhost:${this.configService.getHttpPort()}${EAgentApiUrl.SYS_QUEUE_ITEM_PROCESS}`;
   }
 
   public onModuleInit() {
@@ -86,7 +86,7 @@ export class QueueService implements OnModuleInit {
   }
 
   public registerTask(type: EQueueType, options: QueueOptions, queueTaskInstance: QueueInterface) {
-    const queueOptions = this.agentConfigService.getQueueOptions();
+    const queueOptions = this.configService.getQueueOptions();
     const configOptions = queueOptions && queueOptions[type] ? queueOptions[type] : undefined;
     const effectiveOptions: Required<QueueOptions> = {
       deleteAvailable: options.deleteAvailable ?? DEFAULT_QUEUE_OPTIONS.deleteAvailable,
@@ -229,7 +229,7 @@ export class QueueService implements OnModuleInit {
       try {
         await lastValueFrom(this.http.post(this.queueItemProcessEndpoint, {
           id: queueItem.id,
-          secretKey: this.agentConfigService.getSecretKeyForInternalRequest(),
+          secretKey: this.configService.getSecretKeyForInternalRequest(),
         }));
       } catch (error: any) {
         this.logger.error(`Queue ${queueItem.type}: API failed: ${JSON.stringify(error.response?.data ?? (error.stack ?? error.message))}`);

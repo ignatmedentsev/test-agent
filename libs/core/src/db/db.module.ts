@@ -3,10 +3,10 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, EntityManager } from 'typeorm'; // eslint-disable-line no-restricted-imports -- Allowed only here
 
-import { PathService } from '~agent/services';
 import type { IRequest } from '~common/interfaces';
 import { ApiModule } from '~core/api';
 import { LogService } from '~core/log';
+import { CorePathService } from '~core/services';
 
 import { DbService } from './db.service';
 import { NonTxDbService } from './non-tx.db.service';
@@ -18,15 +18,15 @@ import { TxRegistry } from './tx.registry';
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [],
-      inject: [PathService],
-      useFactory: (pathService: PathService) => {
-        LogService.debug(`Database path ${pathService.getPathToDb()}`, 'DbModule');
+      inject: [CorePathService],
+      useFactory: (corePathService: CorePathService) => {
+        LogService.debug(`Database path ${corePathService.getPathToDb()}`, 'DbModule');
 
         return {
           type: 'sqlite',
-          database: pathService.getPathToDb(),
-          entities: [pathService.getPathToDbEntities(), pathService.getPathToCoreDbEntities()],
-          migrations: [pathService.getPathToDbMigrations(), pathService.getPathToCoreDbMigrations()],
+          database: corePathService.getPathToDb(),
+          entities: [corePathService.getPathToDbEntities(), corePathService.getPathToCoreDbEntities()],
+          migrations: [corePathService.getPathToDbMigrations(), corePathService.getPathToCoreDbMigrations()],
           migrationsRun: process.env.NODE_ENV === 'dev' ? false : true,
           synchronize: false,
         };

@@ -1,6 +1,7 @@
 export { EAgentApiUrl } from './EAgentApiUrl';
 export { EAgentMode } from './EAgentMode';
 export { EAgentOS } from './EAgentOs';
+export { EAiSendType } from './EAiSendType';
 export { EDicomModality, EDicomModalityLabel } from './EDicomModality';
 export { EDicomPatientSex } from './EDicomPatientSex';
 export { EDicomSpecificCharacterSet } from './EDicomSpecificCharacterSet';

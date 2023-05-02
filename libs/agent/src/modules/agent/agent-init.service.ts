@@ -7,22 +7,22 @@ import os from 'os';
 import type { Subscription } from 'rxjs';
 import util from 'util';
 
-import { verifyHttpsOptions } from '~agent/utils/https';
+import { AgentApiClientService } from '~agent/modules/agent-api-client';
+import { AgentConfigService, AgentPathService } from '~agent/services';
 import type { EAgentMode } from '~common/enums';
 import { EPresenceStatus } from '~common/enums';
 import { ESysVarName } from '~common/enums';
 import { EAgentOS } from '~common/enums';
-import { ApiClientService } from '~core/api-client';
+import { TAgentModuleOptions } from '~common/types';
+import { verifyHttpsOptions } from '~common/utils/https';
 import { AuthService } from '~core/auth';
 import { LogService } from '~core/log';
 import { SocketClientService } from '~core/socket';
 import { SysVarService } from '~core/sysvar';
 
-import { AgentConfigService, PathService } from '../../services';
 import { DeviceService } from '../device';
 
 import { GIT_COMMIT_HASH } from './agent.const';
-import { TAgentModuleOptions } from './agent.types';
 
 @Injectable()
 export class AgentInitService implements OnApplicationBootstrap, OnApplicationShutdown {
@@ -34,7 +34,7 @@ export class AgentInitService implements OnApplicationBootstrap, OnApplicationSh
 
   private isConnectedSubscription: Subscription;
   constructor(
-    private readonly apiClientService: ApiClientService,
+    private readonly agentApiClientService: AgentApiClientService,
     private readonly authService: AuthService,
     private readonly configService: AgentConfigService,
     private readonly deviceService: DeviceService,
@@ -43,7 +43,7 @@ export class AgentInitService implements OnApplicationBootstrap, OnApplicationSh
 
     private readonly logger: LogService,
     private readonly socketClientService: SocketClientService,
-    private readonly pathService: PathService,
+    private readonly agentPathService: AgentPathService,
 
     options: TAgentModuleOptions,
   ) {
@@ -82,7 +82,7 @@ export class AgentInitService implements OnApplicationBootstrap, OnApplicationSh
 
     if (storedKey) {
       try {
-        const { key, devices, uuid, httpsOptions, publicPacsServer } = await this.apiClientService.agentAuth(
+        const { key, devices, uuid, httpsOptions, publicPacsServer } = await this.agentApiClientService.agentAuth(
           storedKey,
           agentUUID,
           this.version,
@@ -130,8 +130,8 @@ export class AgentInitService implements OnApplicationBootstrap, OnApplicationSh
 
   private async createDirectories() {
     const directories = [
-      this.pathService.getPathToTemp(),
-      this.pathService.getPathToLogs(),
+      this.agentPathService.getPathToTemp(),
+      this.agentPathService.getPathToLogs(),
     ];
     for (const directory of directories) {
       if (!fs.existsSync(directory)) {

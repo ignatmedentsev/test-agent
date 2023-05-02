@@ -20,7 +20,6 @@ export class MainComponent {
     private readonly apiService: ApiService,
     private readonly authService: AuthService,
     private readonly organizationService: OrganizationService,
-
   ) {}
 
   public openBaseUrl() {

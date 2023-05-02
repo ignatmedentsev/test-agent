@@ -7,9 +7,8 @@ import { parseDateFromDicomTag } from '~agent/utils/date';
 import { getPatientAge } from '~agent/utils/patient.utils';
 import { EDicomTag } from '~common/enums';
 import type { TDicomData, TSeriesData, TStudyData } from '~common/types';
-
-import { PersonName } from '../../utils/PersonName';
-import { PersonNameNormalizer } from '../../utils/PersonNameNormalizer';
+import { PersonName } from '~common/utils/PersonName';
+import { PersonNameNormalizer } from '~common/utils/PersonNameNormalizer';
 
 const DEFAULT_EMPTY_VALUE = '-';
 
@@ -21,7 +20,7 @@ export class StudyDataService {
     const result: TStudyData = {
       patientName: this.getPatientName(phiValues[0]),
       patientId: this.getStringValue(phiValues[0], EDicomTag.PATIENT_ID),
-      patientDob: this.getDateValue(phiValues[0], EDicomTag.PATIENTS_BIRTH_DATE),
+      patientDob: this.getDateValue(phiValues[0], EDicomTag.PATIENT_BIRTH_DATE),
       patientAge: this.getPatientAge(phiValues[0]),
       patientSex: this.getStringValue(phiValues[0], EDicomTag.PATIENT_SEX),
       institutionName: this.getStringValue(phiValues[0], EDicomTag.INSTITUTION_NAME),
@@ -42,11 +41,11 @@ export class StudyDataService {
 
   private getPatientName(dicomData: TDicomData | undefined) {
     if (dicomData
-      && dicomData[EDicomTag.PATIENTS_NAME]
-      && dicomData[EDicomTag.PATIENTS_NAME]?.Value
-      && dicomData[EDicomTag.PATIENTS_NAME]?.Value.length
+      && dicomData[EDicomTag.PATIENT_NAME]
+      && dicomData[EDicomTag.PATIENT_NAME]?.Value
+      && dicomData[EDicomTag.PATIENT_NAME]?.Value.length
     ) {
-      return this.getPersonName((dicomData[EDicomTag.PATIENTS_NAME]?.Value[0] as { Alphabetic: string})?.Alphabetic);
+      return this.getPersonName((dicomData[EDicomTag.PATIENT_NAME]?.Value[0] as { Alphabetic: string})?.Alphabetic);
     } else {
       return DEFAULT_EMPTY_VALUE;
     }
@@ -165,9 +164,9 @@ export class StudyDataService {
 
   private getPatientAge(dicomData: TDicomData | undefined) {
     const dicomPatientDobString = dicomData
-    && dicomData[EDicomTag.PATIENTS_BIRTH_DATE]?.Value?.length
-    && dicomData[EDicomTag.PATIENTS_BIRTH_DATE]?.Value[0]
-      ? dicomData[EDicomTag.PATIENTS_BIRTH_DATE]?.Value[0] as string
+    && dicomData[EDicomTag.PATIENT_BIRTH_DATE]?.Value?.length
+    && dicomData[EDicomTag.PATIENT_BIRTH_DATE]?.Value[0]
+      ? dicomData[EDicomTag.PATIENT_BIRTH_DATE]?.Value[0] as string
       : null;
 
     const dicomDosString = dicomData && dicomData[EDicomTag.STUDY_DATE]?.Value?.length && dicomData[EDicomTag.STUDY_DATE]?.Value[0]

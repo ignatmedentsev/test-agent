@@ -1,15 +1,20 @@
 import { Global, Module } from '@nestjs/common';
 
-import { PathService } from '~agent/services';
+import { AgentPathService } from '~agent/services';
+import { CorePathService } from '~core/services';
 
 import { HeadlessPathService } from './headless-path.service';
 
 @Global()
 @Module({
   providers: [{
-    provide: PathService,
+    provide: AgentPathService,
+    useClass: HeadlessPathService,
+  },
+  {
+    provide: CorePathService,
     useClass: HeadlessPathService,
   }],
-  exports: [PathService],
+  exports: [AgentPathService, CorePathService],
 })
 export class HeadlessPathModule {}

@@ -3,7 +3,7 @@ import { Global, Module } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AgentConfigService } from '~agent/services';
+import { CoreConfigService } from '~core/services';
 
 import { DbModule, NonTxDbService } from '../db';
 import { LogService } from '../log';
@@ -45,7 +45,7 @@ import { QueueService } from './queue.service';
         QueueRegistry,
         QueueRunner,
         QueueRepository,
-        AgentConfigService,
+        CoreConfigService,
       ],
       useFactory: (
         nonTxDb: NonTxDbService,
@@ -54,7 +54,7 @@ import { QueueService } from './queue.service';
         registry: QueueRegistry,
         runner: QueueRunner,
         queueRepository: QueueRepository,
-        config: AgentConfigService,
+        config: CoreConfigService,
       ) => {
         const queueService = new QueueService(nonTxDb, http, logger, registry, runner, queueRepository, config);
 

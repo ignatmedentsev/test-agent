@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { app } from 'electron';
 import path from 'path';
 
-import { PathService } from '~agent/services';
+import { AgentPathService } from '~agent/services';
 
 @Injectable()
-export class DesktopPathService extends PathService {
+export class DesktopPathService extends AgentPathService {
   public getPathToLibs() {
     return process.env.NODE_ENV === 'dev'
       ? path.join(this.getAppPath(), '..', '..', '..', 'libs')

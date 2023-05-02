@@ -1,5 +1,7 @@
 export type { IAbstractEntity } from './IAbstractEntity';
-export type { IConfig } from './IConfig';
+export type { IHeadlessConfig } from './IHeadlessConfig';
+export type { IDesktopConfig } from './IDesktopConfig';
+export type { IDataset, IReferringPhysicianIdentificationSequence } from './IDataset';
 export type { IDevice } from './IDevice';
 export type { IDicomAttributeJsonModel, IValueDicomElement } from './IDicomJsonModel';
 export type { IDicomItem } from './IDicomItem';

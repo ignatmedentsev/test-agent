@@ -1,8 +1,9 @@
 import type { DynamicModule } from '@nestjs/common';
 import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 
-import { AgentConfigService, PathService } from '~agent/services';
+import { AgentConfigService } from '~agent/services';
+import { CoreConfigService } from '~core/services';
 
 import { loadConfiguration } from './headless-config';
 import { HeadlessConfigService } from './headless-config.service';
@@ -16,13 +17,14 @@ export class HeadlessConfigModule {
       global: true,
       imports: [ConfigModule.forRoot({ load: [loadConfiguration] })],
       providers: [{
+        provide: CoreConfigService,
+        useClass: HeadlessConfigService,
+      },
+      {
         provide: AgentConfigService,
-        inject: [ConfigService, PathService],
-        useFactory: (configService: ConfigService, pathService: PathService) => {
-          return new HeadlessConfigService(configService, pathService);
-        },
+        useClass: HeadlessConfigService,
       }],
-      exports: [AgentConfigService],
+      exports: [CoreConfigService, AgentConfigService],
     };
   }
 }

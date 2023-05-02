@@ -2,6 +2,7 @@
 
 import type { PhiPlatformDto } from '~common/dto';
 import type { ETaskStatus, ETaskType } from '~common/enums/task.enum';
+import type { IPacsServer } from '~common/interfaces';
 
 import type { TCheckLocalFileExistenceTaskPayload } from './TCheckLocalFileExistenceTaskPayload';
 import type { TRequestPhiPayload } from './TRequestPhiPayload';
@@ -13,6 +14,7 @@ import type { TUpdatePhiDataPayload } from './TUpdatePhiDataPayload';
 
 export type TTaskPayloadType<T = ETaskType> =
   T extends ETaskType.CHECK_LOCAL_FILE_EXISTENCE ? TCheckLocalFileExistenceTaskPayload :
+  T extends ETaskType.CHECK_PACS_SERVER_CONNECTION ? IPacsServer :
   T extends ETaskType.REQUEST_PHI ? TRequestPhiPayload :
   T extends ETaskType.UPDATE_PHI_DATA ? TUpdatePhiDataPayload :
   T extends ETaskType.REQUEST_STUDY_NOTES ? TRequestStudyNotesPayload :
@@ -34,6 +36,7 @@ never
 
 export type TTaskResponsePayloadType<T = ETaskType> =
   T extends ETaskType.CHECK_LOCAL_FILE_EXISTENCE ? boolean :
+  T extends ETaskType.CHECK_PACS_SERVER_CONNECTION ? { message: string, isError: boolean } :
   T extends ETaskType.REQUEST_PHI ? PhiPlatformDto[] :
   T extends ETaskType.UPDATE_PHI_DATA ? void :
   T extends ETaskType.REQUEST_STUDY_NOTES ? TStudyNotes :

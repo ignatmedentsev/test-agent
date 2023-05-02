@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import merge from 'lodash/merge';
 import { BehaviorSubject } from 'rxjs';
 
+import { AgentApiClientService } from '~agent/modules/agent-api-client';
 import {
   EOrganizationSettings,
   EOrganizationType,
@@ -11,7 +12,6 @@ import {
 } from '~common/enums';
 import type { IOrganizationInfo, IUserInfo } from '~common/interfaces';
 import type { TOrganizationSettingChange } from '~common/types';
-import { ApiClientService } from '~core/api-client';
 import { AuthService } from '~core/auth';
 import { LogService } from '~core/log';
 import { SocketClientService, SocketService } from '~core/socket';
@@ -28,7 +28,7 @@ export class OrganizationService implements OnApplicationBootstrap, OnApplicatio
 
   private userChangedListener: ((data: IUserInfo) => void) | null = null;
   constructor(
-    private readonly apiClientService: ApiClientService,
+    private readonly agentApiClientService: AgentApiClientService,
     private readonly authService: AuthService,
     private readonly logger: LogService,
     private readonly socketClientService: SocketClientService,
@@ -133,6 +133,10 @@ export class OrganizationService implements OnApplicationBootstrap, OnApplicatio
     return this.organizationInfo?.type === EOrganizationType.IMAGING_FACILITY;
   }
 
+  public isAiCompany() {
+    return this.organizationInfo?.type === EOrganizationType.AI_COMPANY;
+  }
+
   public getUserFirstName() {
     return this.userInfo?.firstName;
   }
@@ -176,7 +180,7 @@ export class OrganizationService implements OnApplicationBootstrap, OnApplicatio
 
   private async initOrganizationService() {
     try {
-      const getOrganizationInfo = await this.apiClientService.getOrganizationInfo();
+      const getOrganizationInfo = await this.agentApiClientService.getOrganizationInfo();
 
       this.organizationInfo = getOrganizationInfo.organizationInfo;
       this.userInfo = getOrganizationInfo.userInfo;

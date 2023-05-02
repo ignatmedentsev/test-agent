@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { Injectable } from '@nestjs/common';
 
+import { AgentApiClientService } from '~agent/modules/agent-api-client';
 import { DeviceService } from '~agent/modules/device';
 import type { SubmitExamDto, UpdateStatusDto } from '~common/dto';
 import { EScanDeviceType } from '~common/enums';
-import { ApiClientService } from '~core/api-client';
 
 @Injectable()
 export class MedcloudService {
   constructor(
-    private readonly apiClientService: ApiClientService,
+    private readonly agentApiClientService: AgentApiClientService,
     private readonly deviceService: DeviceService,
   ) {}
 
@@ -29,7 +29,7 @@ export class MedcloudService {
       },
     };
 
-    const error = await this.apiClientService.submitExamWithoutFormThroughAgent(exam);
+    const error = await this.agentApiClientService.submitExamWithoutFormThroughAgent(exam);
 
     return error;
   }

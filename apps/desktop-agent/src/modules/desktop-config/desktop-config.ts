@@ -4,17 +4,15 @@ import util from 'util';
 
 import { platformUrls } from '~common/constants';
 import { EPacsFileUploaderType } from '~common/enums';
-import type { IConfig } from '~common/interfaces';
+import type { IDesktopConfig } from '~common/interfaces';
 import { LogService } from '~core/log';
 
 import { DesktopPathService } from '../desktop-path';
 
 const pathService = new DesktopPathService();
 
-const defaultAgentConfig: IConfig = {
-  apiUrl: process.env.NODE_ENV === 'dev'
-    ? platformUrls.localhost
-    : platformUrls.prod,
+const defaultAgentConfig: IDesktopConfig = {
+  apiUrl: process.env.NODE_ENV === 'dev' ? platformUrls.localhost : platformUrls.prod,
   pacs: {
     aet: 'NANOX',
     port: 9999,
@@ -92,6 +90,6 @@ function loadConfig(configPath: string) {
   }
 }
 
-function isConfig(config: unknown): config is IConfig {
+function isConfig(config: unknown): config is IDesktopConfig {
   return !Array.isArray(config) && typeof config === 'object';
 }

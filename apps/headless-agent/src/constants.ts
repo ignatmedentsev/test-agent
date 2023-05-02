@@ -1,0 +1,2 @@
+export const HEADLESS_APP_HTTP_PORT = 3006;
+export const HEADLESS_APP_HTTPS_PORT = 3005;

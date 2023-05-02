@@ -2,17 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 
+import type { AgentPathService } from '~agent/services';
 import { CronService } from '~core/cron';
 import { LogService } from '~core/log';
 import { QueueService } from '~core/queue';
 
-import type { PathService } from '../services';
-
-export async function bootstrap(module: any, pathService: PathService, httpPort: number) {
+export async function bootstrap(module: any, agentPathService: AgentPathService, httpPort: number) {
   const appServer = await NestFactory.create(
     module,
     new ExpressAdapter(express()),
-    { logger: new LogService(pathService, 'NEST') },
+    { logger: new LogService(agentPathService, 'NEST') },
   );
   appServer.enableCors({
     origin: (origin, callback) => {

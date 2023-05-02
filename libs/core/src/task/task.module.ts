@@ -2,6 +2,7 @@ import type { DynamicModule } from '@nestjs/common';
 import { Module } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
 
+import { ApiClientModule } from '~core/api-client';
 import type { TTaskFunction } from '~core/task/task.interfaces';
 
 import { TaskExplorer } from './task.explorer';
@@ -15,6 +16,7 @@ export class TaskModule {
       module: TaskModule,
       imports: [
         DiscoveryModule,
+        ApiClientModule,
       ],
       providers: [
         TaskRegistry<T, K>,

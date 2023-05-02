@@ -6,7 +6,7 @@ import util from 'util';
 import type { ETaskType } from '~common/enums';
 import { EPlatformSocketEventType, ETaskStatus } from '~common/enums';
 import type { TNewTaskDescription, TTaskResponsePayloadType } from '~common/types/TNewTaskDescription';
-import { ApiClientService } from '~core/api-client';
+import { PlatformApiClientService } from '~core/api-client';
 import { LogService } from '~core/log';
 import { SocketClientService } from '~core/socket';
 
@@ -31,7 +31,7 @@ export class TaskService<T extends string, K extends TTaskFunction> implements O
   }>();
 
   constructor(
-    private readonly apiClientService: ApiClientService,
+    private readonly platformApiClientService: PlatformApiClientService,
     private readonly logger: LogService,
     private readonly registry: TaskRegistry<T, K>,
     private readonly socketClientService: SocketClientService,
@@ -100,7 +100,7 @@ export class TaskService<T extends string, K extends TTaskFunction> implements O
 
     const task = this.registry.getTask(type);
     try {
-      await this.apiClientService.updateTaskStatus(taskId, ETaskStatus.CONFIRMED, type as ETaskType);
+      await this.platformApiClientService.updateTaskStatus(taskId, ETaskStatus.CONFIRMED, type as ETaskType);
       this.logger.debug(`Task id ${taskId} was confirmed: type ${type}, payload ${this.logger.prepareData(payload)}`);
       if (task!.options.queue) {
         this.queueTask(type, taskId, payload);
@@ -146,7 +146,7 @@ export class TaskService<T extends string, K extends TTaskFunction> implements O
 
   private async updateTaskSuccess(type: T, taskId: string, payload: TTaskResponsePayloadType<T>) {
     try {
-      await this.apiClientService.updateTaskStatus(taskId, ETaskStatus.SUCCESS, type as ETaskType, payload);
+      await this.platformApiClientService.updateTaskStatus(taskId, ETaskStatus.SUCCESS, type as ETaskType, payload);
       this.logger.debug(`Task id ${taskId} was updated with status ${ETaskStatus.SUCCESS}: type ${type} payload ${util.inspect(payload)}`);
     } catch (error) {
       this.logErrorMessage(error);
@@ -157,7 +157,7 @@ export class TaskService<T extends string, K extends TTaskFunction> implements O
     this.logger.error(`Task id ${taskId} was failed: type ${type} error: ${errorMessage}`);
 
     try {
-      await this.apiClientService.updateTaskStatus(taskId, ETaskStatus.ERROR, type as ETaskType, errorMessage);
+      await this.platformApiClientService.updateTaskStatus(taskId, ETaskStatus.ERROR, type as ETaskType, errorMessage);
     } catch (error) {
       this.logErrorMessage(error);
     }

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { BehaviorSubject } from 'rxjs';
 
-import { AgentConfigService } from '~agent/services';
 import { EPlatformSocketEventType, ERenderSocketEventType } from '~common/enums';
+import { CoreConfigService } from '~core/services';
 import { SocketClientService, SocketService } from '~core/socket';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class AuthService {
   public readonly isAuth = new BehaviorSubject(false);
 
   constructor(
-    private readonly configService: AgentConfigService,
+    private readonly configService: CoreConfigService,
     private readonly socketService: SocketService,
     private readonly socketClientService: SocketClientService,
   ) {}

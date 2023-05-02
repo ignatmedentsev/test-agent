@@ -5,11 +5,11 @@ import { BehaviorSubject, interval } from 'rxjs';
 import type { ManagerOptions, Socket as ClientSocket, SocketOptions } from 'socket.io-client';
 import { io } from 'socket.io-client';
 
-import { AgentConfigService } from '~agent/services';
 import type { EPresenceStatus } from '~common/enums';
 import { EPlatformSocketEventType } from '~common/enums';
 import type { TPlatformSocketEventPayload } from '~common/types';
 import { LogService } from '~core/log';
+import { CoreConfigService } from '~core/services';
 
 type TListenerList = Map<EPlatformSocketEventType, Array<(...args: any[]) => void>>;
 
@@ -26,7 +26,7 @@ export class SocketClientService implements OnModuleInit {
 
   constructor(
     private readonly logger: LogService,
-    private readonly configService: AgentConfigService,
+    private readonly configService: CoreConfigService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -46,7 +46,7 @@ export class SocketClientService implements OnModuleInit {
 
   public connect() {
     const agentkey = this.configService.getKey();
-    const apiUrl = this.configService.getApiUrl();
+    const apiUrl = this.configService.getPlatformApiUrl();
     const ioConfig: Partial<ManagerOptions & SocketOptions> = { autoConnect: false, transports: ['websocket'] };
 
     if (agentkey) {

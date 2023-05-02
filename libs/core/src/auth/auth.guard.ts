@@ -2,16 +2,16 @@ import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus, Injectable } from '@nestjs/common';
 
-import { AgentConfigService } from '~agent/services';
 import { ApiRegistry } from '~core/api';
 import { LogService } from '~core/log';
+import { CoreConfigService } from '~core/services';
 
 // TODO: remove, refactor to @nestjs/passport
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly apiRegistry: ApiRegistry,
-    private readonly configService: AgentConfigService,
+    private readonly configService: CoreConfigService,
     private readonly logger: LogService,
   ) {
     logger.setContext(this.constructor.name);

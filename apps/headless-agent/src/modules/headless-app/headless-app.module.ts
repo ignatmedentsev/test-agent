@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AgentModule } from '~agent/modules/agent';
-import { HEADLESS_APP_HTTPS_PORT } from '~common/constants';
 import { EAgentMode } from '~common/enums';
 import { ErrorFilter } from '~core/filter';
 import { LogInterceptor } from '~core/interceptors';
+import { HEADLESS_APP_HTTPS_PORT } from '~headless-app/constants';
 
 import { HeadlessConfigModule } from '../headless-config';
 import { HeadlessPathModule } from '../headless-path';

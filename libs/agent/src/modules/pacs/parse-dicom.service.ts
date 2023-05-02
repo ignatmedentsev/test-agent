@@ -4,9 +4,8 @@ import dicomParser from 'dicom-parser';
 
 import { EDicomTag, EExamPriority } from '~common/enums';
 import type { IDicomItem, IPacsFileInfo } from '~common/interfaces';
-
-import { PersonName } from '../../utils/PersonName';
-import { PersonNameNormalizer } from '../../utils/PersonNameNormalizer';
+import { PersonName } from '~common/utils/PersonName';
+import { PersonNameNormalizer } from '~common/utils/PersonNameNormalizer';
 
 const PR_MODALITY = 'PR';
 const EXAM_PRIORITY_MAPPING = new Map<string, EExamPriority>(

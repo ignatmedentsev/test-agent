@@ -7,7 +7,7 @@ import type { IHttpRetryOptions } from './IHttpRetryOptions';
 import type { IPacsOptions } from './IPacsConfig';
 import type { IStorescu } from './IStorescu';
 
-export interface IConfig {
+export interface ICoreConfig {
   apiUrl: string;
   key?: string;
   pacs: IPacsOptions;
@@ -18,6 +18,5 @@ export interface IConfig {
   allowInsecureDimsePacsFileUpload: boolean;
   checkTlsTimeout: number;
   httpRetryOptions: IHttpRetryOptions;
-  autoUpdate: boolean;
   queueOptions?: TQueueOptions;
 }

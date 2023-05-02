@@ -1,32 +1,35 @@
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
-import { AgentConfigService } from '~agent/services';
 import { AuthService } from '~core/auth';
 import { LogService } from '~core/log';
+import { CoreConfigService } from '~core/services';
 
-import { ApiClientService } from './api-client.service';
-import { HttpApiService } from './http-api-service';
-import { HttpRetryService } from './http-retry-service';
+import { PlatformApiClientService } from './platform-api-client.service';
+import { PlatformHttpRetryService } from './platform-http-retry-service';
+import { PlatformHttpService } from './platform-http-service';
 
-@Global()
 @Module({
   providers: [
-    ApiClientService,
+    PlatformApiClientService,
     {
-      provide: HttpRetryService,
-      inject: [AgentConfigService, AuthService, LogService],
-      useFactory: (configService: AgentConfigService, authService: AuthService, logService: LogService) => {
-        return new HttpRetryService(configService, authService, logService);
+      provide: PlatformHttpRetryService,
+      inject: [AuthService, CoreConfigService, LogService],
+      useFactory: (authService: AuthService, configService: CoreConfigService, logService: LogService) => {
+        return new PlatformHttpRetryService(authService, configService, logService);
       },
     },
     {
-      provide: HttpApiService,
-      inject: [AgentConfigService, AuthService, LogService],
-      useFactory: (configService: AgentConfigService, authService: AuthService, logService: LogService) => {
-        return new HttpApiService(configService, authService, logService);
+      provide: PlatformHttpService,
+      inject: [AuthService, CoreConfigService, LogService],
+      useFactory: (authService: AuthService, configService: CoreConfigService, logService: LogService) => {
+        return new PlatformHttpService(authService, configService, logService);
       },
     },
   ],
-  exports: [ApiClientService],
+  exports: [
+    PlatformApiClientService,
+    PlatformHttpService,
+    PlatformHttpRetryService,
+  ],
 })
 export class ApiClientModule {}

@@ -5,8 +5,8 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob, CronTime } from 'cron';
 import { lastValueFrom } from 'rxjs';
 
-import { AgentConfigService } from '~agent/services';
 import { EAgentApiUrl } from '~common/enums'; // TODO: get rid of dependency
+import { CoreConfigService } from '~core/services';
 
 import { NonTxDbService } from '../db';
 import { LogService } from '../log';
@@ -29,10 +29,10 @@ export class CronService implements OnModuleInit {
     private readonly logger: LogService,
     private readonly registry: CronRegistry,
     private readonly scheduler: SchedulerRegistry,
-    private readonly agentConfigService: AgentConfigService,
+    private readonly сonfigService: CoreConfigService,
   ) {
     logger.setContext(this.constructor.name);
-    this.cronItemProcessEndpoint = `http://localhost:${this.agentConfigService.getHttpPort()}${EAgentApiUrl.SYS_CRON_ITEM_PROCESS}`;
+    this.cronItemProcessEndpoint = `http://localhost:${this.сonfigService.getHttpPort()}${EAgentApiUrl.SYS_CRON_ITEM_PROCESS}`;
   }
 
   public onModuleInit() {
@@ -136,7 +136,7 @@ export class CronService implements OnModuleInit {
       try {
         await lastValueFrom(this.http.post(this.cronItemProcessEndpoint, {
           name,
-          secretKey: this.agentConfigService.getSecretKeyForInternalRequest(),
+          secretKey: this.сonfigService.getSecretKeyForInternalRequest(),
         }));
       } catch (error: any) {
         this.logger.error(`Cron ${name}: API failed: ${JSON.stringify(error.response?.data ?? (error.stack ?? error.message))}`);

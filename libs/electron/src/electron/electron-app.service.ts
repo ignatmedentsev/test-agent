@@ -3,9 +3,8 @@ import { Injectable } from '@nestjs/common';
 import type { Event } from 'electron';
 import { app as electronApp, Menu, screen, BrowserWindow } from 'electron';
 import path from 'path';
-import { BehaviorSubject } from 'rxjs';
 
-import { PathService } from '~agent/services';
+import { AgentPathService } from '~agent/services';
 import { LogService } from '~core/log';
 
 enum EAppEvents {
@@ -27,14 +26,12 @@ enum EWindowEvents {
 
 @Injectable()
 export class ElectronAppService implements OnApplicationBootstrap {
-  public readonly isFocused = new BehaviorSubject(false);
-
   private app = electronApp;
   private mainWindow: BrowserWindow;
 
   constructor(
     private readonly logger: LogService,
-    private readonly pathService: PathService,
+    private readonly pathService: AgentPathService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -86,8 +83,6 @@ export class ElectronAppService implements OnApplicationBootstrap {
       });
       this.mainWindow.on(EWindowEvents.CLOSE, () => this.logger.log(`window ${EWindowEvents.CLOSE}`));
       this.mainWindow.on(EWindowEvents.CLOSED, () => this.logger.log(`window ${EWindowEvents.CLOSED}`));
-      this.mainWindow.on(EWindowEvents.SHOW, () => this.isFocused.next(true));
-      this.mainWindow.on(EWindowEvents.BLUR, () => this.isFocused.next(false));
     } else {
       this.mainWindow.show();
     }

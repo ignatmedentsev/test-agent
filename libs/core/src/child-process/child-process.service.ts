@@ -35,7 +35,7 @@ class TimeoutKiller {
   }
 }
 
-class ErrorSpawnHandler {
+export class ErrorSpawnHandler {
   private stdoutCallback: Function | undefined;
   private stderrCallback: Function | undefined;
 

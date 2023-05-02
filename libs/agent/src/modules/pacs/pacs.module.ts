@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { DicomSenderModule } from '~agent/modules/dicom-sender';
 import { FileModule } from '~agent/modules/file';
 import { OrganizationModule } from '~agent/modules/organization';
 import { PhiModule } from '~agent/modules/phi';
@@ -13,6 +14,7 @@ import { ParseDicomService } from './parse-dicom.service';
     FileModule,
     OrganizationModule,
     PhiModule,
+    DicomSenderModule,
   ],
   providers: [
     DicomProcessorQueue,

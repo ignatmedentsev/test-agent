@@ -10,12 +10,13 @@ import stream from 'stream';
 import tls from 'tls';
 import util from 'util';
 
+import { AgentApiClientService } from '~agent/modules/agent-api-client';
 import { FileService } from '~agent/modules/file';
 import { PhiService } from '~agent/modules/phi';
 import {
-  AgentConfigService,
   DicomPatcherService,
-  PathService,
+  AgentPathService,
+  AgentConfigService,
 } from '~agent/services';
 import type { IPacsServer } from '~common/interfaces';
 import type {
@@ -23,7 +24,6 @@ import type {
   TSendLocalDicomPayload,
   TSendPlatformDicomPayload,
 } from '~common/types';
-import { ApiClientService } from '~core/api-client';
 import { LogService } from '~core/log';
 
 import { DcmJsResponseFormatter } from './dcmjs-response-formatter.service';
@@ -53,13 +53,13 @@ const DEFAULT_DIMSE_OPTIONS: TDimseOptions = { allowInsecure: true, checkTls: fa
 @Injectable()
 export class DicomSenderService {
   constructor(
-    private readonly apiClientService: ApiClientService,
+    private readonly agentApiClientService: AgentApiClientService,
     private readonly dcmJsResponseFormatter: DcmJsResponseFormatter,
     private readonly fileService: FileService,
     private readonly phiService: PhiService,
     private readonly logger: LogService,
     private readonly configService: AgentConfigService,
-    private readonly pathService: PathService,
+    private readonly agentPathService: AgentPathService,
   ) {
     logger.setContext(this.constructor.name);
   }
@@ -145,7 +145,7 @@ export class DicomSenderService {
     ].join(''));
 
     let result = 'success';
-    const tempPath = this.pathService.getPathToTemp();
+    const tempPath = this.agentPathService.getPathToTemp();
     const receivedFilePath = path.join(tempPath, `${taskId}.dcm`);
 
     try {
@@ -154,7 +154,7 @@ export class DicomSenderService {
       }
 
       await this.performCEcho(pacsServer);
-      const datasetStream = await this.apiClientService.getAgentFileStream(taskId);
+      const datasetStream = await this.agentApiClientService.getAgentFileStream(taskId);
       const writeStream = fs.createWriteStream(receivedFilePath);
       await pipeline(datasetStream, writeStream);
 
@@ -184,6 +184,57 @@ export class DicomSenderService {
       if (fs.existsSync(receivedFilePath)) {
         await fs.promises.unlink(receivedFilePath);
       }
+    }
+  }
+
+  public async pingPacsServer(pacsServer: IPacsServer) {
+    try {
+      await new Promise<string>((resolve, reject) => {
+        const client = (new Client()) as Client & EventEmitter;
+        const request = new CEchoRequest();
+
+        client.addRequest(request);
+
+        request.on('response', (response: responses.CEchoResponse) => {
+          const status = response.getStatus();
+          if (status === Status.Success) {
+            resolve('');
+          } else {
+            reject(`Unsuccessful response status: ${this.dcmJsResponseFormatter.getStatusDescription(status)}`);
+          }
+        });
+        client.on('associationRejected', (result: TAssociationRejectResult) => {
+          // need only REJECT_REASON_MAP status without result, source
+          reject(`Association Rejected: ${this.dcmJsResponseFormatter.getRejectReason(result.reason)}`);
+        });
+        client.on('networkError', (e: Error) => {
+          // without stack ?
+          reject(`Network error: ${e.message || 'Unknown error'}`);
+        });
+        client.on('error', (e: Error) => {
+          // without stack ?
+          reject(`Error: ${e.message || 'Unknown error'}`);
+        });
+        client.on('closed', () => {
+          reject('Connection closed');
+        });
+
+        const options = this.configService.getStorescuOptions();
+
+        client.send(pacsServer.host, pacsServer.port, pacsServer.sourceAet ?? DEFAULT_SOURCE_AET, pacsServer.destinationAet, options);
+      });
+
+      return {
+        isError: false,
+        message: `Connection through agent #${pacsServer.agent?.id} to PACS server `
+          + `${pacsServer.destinationAet}@${pacsServer.host}:${pacsServer.port} with sourceAet: ${pacsServer.sourceAet || ''} was successfully established`,
+        };
+    } catch (error) {
+      return {
+        isError: true,
+        message: `Connection through agent #${pacsServer.agent?.id} to PACS server `
+        + `${pacsServer.destinationAet}@${pacsServer.host}:${pacsServer.port} with sourceAet: ${pacsServer.sourceAet || ''} was failed with error: ${error as string}`,
+      };
     }
   }
 
@@ -285,5 +336,5 @@ export class DicomSenderService {
           resolve(false);
         });
     });
-   }
+  }
 }

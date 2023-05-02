@@ -1,0 +1,2 @@
+export const DESKTOP_APP_HTTP_PORT = 3004;
+export const DESKTOP_APP_HTTPS_PORT = 3003;

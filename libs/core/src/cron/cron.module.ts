@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule';
 
-import { AgentConfigService } from '~agent/services';
+import { CoreConfigService } from '~core/services';
 
 import { DbModule, NonTxDbService } from '../db';
 import { LogService } from '../log';
@@ -55,7 +55,7 @@ export class CronModule {
             LogService,
             SchedulerRegistry,
             CronRegistry,
-            AgentConfigService,
+            CoreConfigService,
           ],
           useFactory: (
             nonTxDb: NonTxDbService,
@@ -64,7 +64,7 @@ export class CronModule {
             logger: LogService,
             scheduler: SchedulerRegistry,
             registry: CronRegistry,
-            config: AgentConfigService,
+            config: CoreConfigService,
           ) => {
             const cronService = new CronService(nonTxDb, runner, http, logger, registry, scheduler, config);
 

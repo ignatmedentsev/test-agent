@@ -3,23 +3,23 @@ import { Module } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 
-import { HttpsModule } from '~agent/modules/https/https.module';
+import { AgentApiClientModule, AgentApiClientService } from '~agent/modules/agent-api-client';
+import { AgentConfigService, AgentPathService } from '~agent/services';
 import type { ETaskType } from '~common/enums';
-import type { TAgentTaskFunction } from '~common/types';
+import type { TAgentModuleOptions, TAgentTaskFunction } from '~common/types';
 import { ApiModule } from '~core/api';
-import { ApiClientModule, ApiClientService } from '~core/api-client';
 import { AuthModule, AuthService } from '~core/auth';
 import { ChildProcessModule } from '~core/child-process';
 import { CronModule } from '~core/cron';
 import { DbModule } from '~core/db';
 import { TxMiddleware } from '~core/db/tx.middleware';
+import { HttpsModule } from '~core/https/https.module';
 import { LogModule, LogService } from '~core/log';
 import { QueueModule } from '~core/queue';
 import { SocketClientService, SocketModule } from '~core/socket';
 import { SysVarService, SysVarModule } from '~core/sysvar';
 import { TaskModule } from '~core/task';
 
-import { AgentConfigService, PathService } from '../../services';
 import { DeviceModule, DeviceService } from '../device';
 import { DicomUploaderModule } from '../dicom-uploader';
 import { MedcloudModule } from '../medcloud';
@@ -30,11 +30,10 @@ import { RootModule } from '../root';
 import { StudyNotesModule } from '../study-notes';
 
 import { AgentInitService } from './agent-init.service';
-import type { TAgentModuleOptions } from './agent.types';
 
 @Module({
   imports: [
-    ApiClientModule,
+    AgentApiClientModule,
     ScheduleModule.forRoot(),
     ChildProcessModule,
     DbModule,
@@ -66,7 +65,7 @@ export class AgentModule implements NestModule {
       providers: [{
         provide: AgentInitService,
         inject: [
-          ApiClientService,
+          AgentApiClientService,
           AuthService,
           AgentConfigService,
           DeviceService,
@@ -74,10 +73,10 @@ export class AgentModule implements NestModule {
           HttpAdapterHost,
           LogService,
           SocketClientService,
-          PathService,
+          AgentPathService,
         ],
         useFactory: (
-          apiClientService: ApiClientService,
+          agentApiClientService: AgentApiClientService,
           authService: AuthService,
           configService: AgentConfigService,
           deviceService: DeviceService,
@@ -85,10 +84,10 @@ export class AgentModule implements NestModule {
           httpAdapterHost: HttpAdapterHost,
           logger: LogService,
           socketClientService: SocketClientService,
-          pathService: PathService,
+          agentPathService: AgentPathService,
         ) => {
           return new AgentInitService(
-            apiClientService,
+            agentApiClientService,
             authService,
             configService,
             deviceService,
@@ -96,7 +95,7 @@ export class AgentModule implements NestModule {
             httpAdapterHost,
             logger,
             socketClientService,
-            pathService,
+            agentPathService,
             options,
           );
         },

@@ -6,7 +6,7 @@ import path from 'path';
 import type winston from 'winston';
 import { createLogger, format, transports } from 'winston';
 
-import { PathService } from '~agent/services';
+import { CorePathService } from '~core/services';
 
 const DEFAULT_CONTEXT = 'Agent';
 
@@ -50,13 +50,13 @@ export class LogService extends ConsoleLogger {
   ];
 
   constructor(
-    private readonly pathService: PathService,
+    private readonly corePathService: CorePathService,
     context = DEFAULT_CONTEXT,
   ) {
     super(context ?? '');
 
     if (!LogService.logger) {
-      LogService.pathLogs = this.pathService.getPathToLogs();
+      LogService.pathLogs = this.corePathService.getPathToLogs();
       LogService.createLogger();
     }
   }

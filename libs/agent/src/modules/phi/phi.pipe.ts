@@ -18,6 +18,9 @@ export class PhiValidationPipe implements PipeTransform {
   }
 
   public transform(phi: PhiDto, _: ArgumentMetadata) {
+    if (!phi.studyInstanceUid) {
+      throw new HttpException(`Field 'studyInstanceUid' is required`, HttpStatus.BAD_REQUEST);
+    }
     if (!phi.sopInstanceUid) {
       throw new HttpException(`Field 'sopInstanceUid' is required`, HttpStatus.BAD_REQUEST);
     }

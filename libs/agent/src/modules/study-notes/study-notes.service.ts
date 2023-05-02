@@ -5,9 +5,10 @@ import merge from 'lodash/merge';
 import path from 'path';
 
 import { DicomSenderService } from '~agent/modules/dicom-sender';
+import { AgentPathService } from '~agent/services';
 import type { PhiPlatformDto } from '~common/dto';
 import { EDicomTag, EDicomVr } from '~common/enums';
-import type { IUids } from '~common/interfaces';
+import type { IDataset, IUids } from '~common/interfaces';
 import type {
   TDicomData,
   TRequestStudyNotesPayload,
@@ -15,13 +16,12 @@ import type {
   TSendStudyNotesPayload,
   TDeepPartial,
 } from '~common/types';
+import { create225Uid } from '~common/utils/uid';
 
-import { PathService } from '../../services';
 import { ParseDicomService } from '../pacs';
 import { PhiService } from '../phi';
 
 import { StudyDataService } from './study-data.service';
-import type { IDataset } from './study-notes.types';
 import { SVGGenerator } from './svg-generator';
 
 const dcmjs = require('dcmjs');
@@ -35,7 +35,7 @@ export class StudyNotesService {
   constructor(
     private readonly dicomSender: DicomSenderService,
     private readonly parseDicomService: ParseDicomService,
-    private readonly pathService: PathService,
+    private readonly agentPathService: AgentPathService,
     private readonly phiService: PhiService,
     private readonly studyDataService: StudyDataService,
   ) {}
@@ -200,27 +200,27 @@ export class StudyNotesService {
   }
 
   private generateUids(payload: TRequestStudyNotesPayload | TSendStudyNotesPayload) {
-    const fakeSeriesInstanceUid = this.create225Uid(JSON.stringify({
+    const fakeSeriesInstanceUid = create225Uid(JSON.stringify({
       examId: payload.examId,
       scanId: payload.scanId,
       type: 'fake',
       seriesNumber: STUDY_NOTES_SERIES_NUMBER,
     }));
 
-    const realSeriesInstanceUid = this.create225Uid(JSON.stringify({
+    const realSeriesInstanceUid = create225Uid(JSON.stringify({
       examId: payload.examId,
       scanId: payload.scanId,
       type: 'real',
       seriesNumber: STUDY_NOTES_SERIES_NUMBER,
     }));
 
-    const fakeSopInstanceUid = this.create225Uid(JSON.stringify({
+    const fakeSopInstanceUid = create225Uid(JSON.stringify({
       examId: payload.examId,
       scanId: payload.scanId,
       type: 'fake',
     }));
 
-    const realSopInstanceUid = this.create225Uid(JSON.stringify({
+    const realSopInstanceUid = create225Uid(JSON.stringify({
       examId: payload.examId,
       scanId: payload.scanId,
       type: 'real',
@@ -310,10 +310,10 @@ export class StudyNotesService {
 
   private getPatientNameString(dicomData: TDicomData | undefined): string {
     return dicomData
-      && dicomData[EDicomTag.PATIENTS_NAME]?.Value
-      && dicomData[EDicomTag.PATIENTS_NAME]?.Value[0]
-      && (dicomData[EDicomTag.PATIENTS_NAME]?.Value[0] as { Alphabetic: string })?.Alphabetic
-      ? (dicomData[EDicomTag.PATIENTS_NAME]?.Value[0] as { Alphabetic: string })?.Alphabetic
+      && dicomData[EDicomTag.PATIENT_NAME]?.Value
+      && dicomData[EDicomTag.PATIENT_NAME]?.Value[0]
+      && (dicomData[EDicomTag.PATIENT_NAME]?.Value[0] as { Alphabetic: string })?.Alphabetic
+      ? (dicomData[EDicomTag.PATIENT_NAME]?.Value[0] as { Alphabetic: string })?.Alphabetic
       : DEFAULT_EMPTY_VALUE;
   }
 
@@ -344,16 +344,6 @@ export class StudyNotesService {
       : DEFAULT_EMPTY_VALUE;
   }
 
-  private create225Uid(stringifiedParameters: string) {
-    return '2.25.' + (crypto.createHash('sha1').update(stringifiedParameters)
-      .digest('hex')
-      .split('')
-      .map(i => i.charCodeAt(0).toString())
-      .join('')
-      .replace(/^0+/g, '')
-      .substring(0, 39));
-  }
-
   private getTaskId(payload: TSendStudyNotesPayload | TRequestStudyNotesPayload) {
     return crypto.createHash('sha1').update(JSON.stringify({ payload })).digest('hex');
   }
@@ -361,6 +351,6 @@ export class StudyNotesService {
   private getStudyNotePath(payload: TSendStudyNotesPayload | TRequestStudyNotesPayload) {
     const taskId = this.getTaskId(payload);
 
-    return path.join(this.pathService.getPathToTemp(), `${taskId}-study-notes.dcm`);
+    return path.join(this.agentPathService.getPathToTemp(), `${taskId}-study-notes.dcm`);
   }
 }

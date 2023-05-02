@@ -1,2 +1,2 @@
 export { ChildProcessModule } from './child-process.module';
-export { ChildProcessService } from './child-process.service';
+export { ChildProcessService, ErrorSpawnHandler } from './child-process.service';

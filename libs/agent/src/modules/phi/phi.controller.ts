@@ -1,10 +1,10 @@
 import { Body, Controller, UseGuards, UsePipes } from '@nestjs/common';
 
 import { DeviceGuard } from '~agent/modules/device';
-import { HttpsOnlyGuard } from '~agent/modules/https';
 import { PhiDto } from '~common/dto';
 import { EAgentApiUrl } from '~common/enums';
 import { Api } from '~core/api';
+import { HttpsOnlyGuard } from '~core/https';
 
 import { PhiValidationPipe } from './phi.pipe';
 import { PhiService } from './phi.service';

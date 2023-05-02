@@ -2,7 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { DESKTOP_APP_HTTP_PORT } from '~common/constants';
+import { DESKTOP_APP_HTTP_PORT } from '~desktop-app/constants';
 
 import { AppInitService } from './app-init.service';
 import { AppRoutingModule } from './app-routing.module';

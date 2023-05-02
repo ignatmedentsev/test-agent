@@ -1,7 +1,6 @@
-
 import { bootstrap } from '~agent/utils/bootstrap';
-import { DESKTOP_APP_HTTP_PORT } from '~common/constants';
 
+import { DESKTOP_APP_HTTP_PORT } from './constants';
 import { DesktopAppModule } from './modules/desktop-app';
 import { DesktopPathService } from './modules/desktop-path';
 

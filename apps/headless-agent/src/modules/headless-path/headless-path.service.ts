@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import path from 'path';
 
-import { PathService } from '~agent/services';
+import { AgentPathService } from '~agent/services';
 
 @Injectable()
-export class HeadlessPathService extends PathService {
+export class HeadlessPathService extends AgentPathService {
   public getPathToData() {
     return path.resolve('data');
   }

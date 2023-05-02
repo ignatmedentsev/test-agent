@@ -9,7 +9,7 @@ export class MainGuard implements CanActivate {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
-  ) { }
+  ) {}
 
   canActivate() {
     if (!this.authService.isLogin()) {

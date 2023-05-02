@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import fs from 'fs';
 import { combineLatest } from 'rxjs';
 
-import { AgentConfigService, PathService } from '~agent/services';
+import { AgentConfigService, AgentPathService } from '~agent/services';
 import { EQueueType } from '~common/enums';
 import { AuthService } from '~core/auth';
 import { NonTxDbService } from '~core/db';
@@ -31,7 +31,7 @@ export class PacsService implements OnApplicationBootstrap {
     private readonly fileService: FileService,
     private readonly logger: LogService,
     private readonly organizationService: OrganizationService,
-    private readonly pathService: PathService,
+    private readonly pathService: AgentPathService,
     private readonly queueManager: QueueManagerService,
     private readonly queueService: QueueService,
   ) {

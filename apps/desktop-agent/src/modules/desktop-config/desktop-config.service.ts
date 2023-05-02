@@ -2,24 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import fs from 'fs';
 
-import { AgentConfigService, PathService } from '~agent/services';
-import { DESKTOP_APP_HTTP_PORT, DESKTOP_APP_HTTPS_PORT } from '~common/constants';
-import type { IConfig } from '~common/interfaces';
+import { AgentPathService } from '~agent/services';
+import { DesktopAgentConfigService } from '~agent/services/desktop-agent-config.service';
+import type { IDesktopConfig } from '~common/interfaces';
+import { DESKTOP_APP_HTTPS_PORT, DESKTOP_APP_HTTP_PORT } from '~desktop-app/constants';
 
 @Injectable()
-export class DesktopConfigService extends AgentConfigService {
+export class DesktopConfigService extends DesktopAgentConfigService {
   constructor(
     configService: ConfigService,
-    pathService: PathService,
+    protected readonly agentPathService: AgentPathService,
   ) {
-    super(configService, pathService);
+    super(configService);
     this.httpPort = DESKTOP_APP_HTTP_PORT;
     this.httpsPort = DESKTOP_APP_HTTPS_PORT;
   }
 
   public async setKey(key: string) {
-    const configPath = this.pathService.getPathToConfig();
-    const config = JSON.parse(await fs.promises.readFile(configPath, 'utf-8')) as IConfig;
+    const configPath = this.agentPathService.getPathToConfig();
+    const config = JSON.parse(await fs.promises.readFile(configPath, 'utf-8')) as IDesktopConfig;
 
     if (!key) {
       delete config.key;

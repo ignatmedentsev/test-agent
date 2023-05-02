@@ -1,7 +1,9 @@
 export type { TAgentApiType } from './TAgentApiType';
+export type { TApiDescription } from './TApiDescription';
 export type { TAgentOrganizationSetting } from './TAgentOrganizationSetting';
 export type { TAgentPublicPacsServerOptions } from './TAgentPublicPacsServerOptions';
 export type { TAgentTaskFunction } from './TAgentTaskFunction';
+export type { TAgentModuleOptions } from './TAgentModuleOptions';
 export type { TCheckLocalFileExistenceTaskPayload } from './TCheckLocalFileExistenceTaskPayload';
 export type { TDeepPartial } from './TDeepPartial';
 export type { TDicomAttributeValue } from './TDicomAttributeValue';
@@ -12,7 +14,7 @@ export type { TDicomPatientSexCodeStringValue } from './TDicomPatientSexCodeStri
 export type { TDicomSingleMultiplicityStringValue } from './TDicomSingleMultiplicityStringValue';
 export type { TDicomSingleMultiplicityValue } from './TDicomSingleMultiplicityValue';
 export type { TDicomUniversalEntityIdValue } from './TDicomUniversalEntityIdValue';
-export type { TDicomUploaderQueuePayload } from './TDicomUploaderQueuePayload';
+export type { TDicomUploaderQueuePayload, TAiDicomUploaderQueuePayload } from './TDicomUploaderQueuePayload';
 export type { THttpsOptions } from './THttpsOptions';
 export type { TOrganizationSettingChange } from './TOrganizationSettingChange';
 export type { TPlatformApiResponse } from './TPlatformApiResponse';

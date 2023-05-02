@@ -2,7 +2,7 @@ import type { DynamicModule } from '@nestjs/common';
 import { Global, Module } from '@nestjs/common';
 import { AppUpdater, autoUpdater } from 'electron-updater';
 
-import { AgentConfigService } from '~agent/services';
+import { DesktopAgentConfigService } from '~agent/services';
 import { AuthModule } from '~core/auth';
 import { LogService } from '~core/log';
 import { SocketModule } from '~core/socket';
@@ -29,8 +29,8 @@ export class ElectronModule {
         UpdaterService,
         {
           provide: AppUpdater,
-          inject: [AgentConfigService, LogService],
-          useFactory: (configService: AgentConfigService, logger: LogService) => {
+          inject: [DesktopAgentConfigService, LogService],
+          useFactory: (configService: DesktopAgentConfigService, logger: LogService) => {
             autoUpdater.logger = logger;
             autoUpdater.fullChangelog = true;
             autoUpdater.autoInstallOnAppQuit = configService.getAutoUpdateOption();

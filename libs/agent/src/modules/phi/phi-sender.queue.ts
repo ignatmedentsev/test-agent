@@ -1,9 +1,9 @@
 import { Phi } from '~agent/entity';
+import { AgentApiClientService } from '~agent/modules/agent-api-client';
 import type { SubmitExamDto } from '~common/dto';
 import { EDicomTag, EQueueType, EScanDeviceType, EScanStatusMapping } from '~common/enums';
 import type { IDevice, IPacsFile } from '~common/interfaces';
 import { getStringValue, getStringValueFromSequence } from '~common/utils/dicom';
-import { ApiClientService } from '~core/api-client';
 import type { DbService } from '~core/db';
 import { LogService } from '~core/log';
 import type { QueueInterface } from '~core/queue';
@@ -17,7 +17,7 @@ export type TPhiSendPayload = {
 @Queue(EQueueType.PHI_SENDER, { maxAttempts: 3, transaction: false })
 export class PhiSender implements QueueInterface {
   constructor(
-    private readonly apiClientService: ApiClientService,
+    private readonly agentApiClientService: AgentApiClientService,
     private readonly logger: LogService,
   ) {
     logger.setContext(this.constructor.name);
@@ -54,7 +54,7 @@ export class PhiSender implements QueueInterface {
       },
     };
 
-    const error = await this.apiClientService.submitExamWithoutFormThroughAgent(exam);
+    const error = await this.agentApiClientService.submitExamWithoutFormThroughAgent(exam);
 
     if (error) {
       this.logger.error(`Cant create exam on platform for sopInstanceUid "${savedPhi.sopInstanceUid}". Error: ${error.message}`);

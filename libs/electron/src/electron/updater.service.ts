@@ -7,7 +7,8 @@ import * as fs from 'fs';
 import path from 'path';
 import util from 'util';
 
-import { AgentConfigService, PathService } from '~agent/services';
+import { AgentPathService } from '~agent/services';
+import { DesktopAgentConfigService } from '~agent/services';
 import { ERenderSocketEventType } from '~common/enums';
 import { LogService } from '~core/log';
 import { SocketService } from '~core/socket';
@@ -27,9 +28,9 @@ export class UpdaterService implements OnApplicationBootstrap {
     private readonly autoUpdater: AppUpdater,
     private readonly logger: LogService,
     private readonly socketService: SocketService,
-    private readonly configService: AgentConfigService,
+    private readonly configService: DesktopAgentConfigService,
     private readonly electronAppService: ElectronAppService,
-    private readonly pathService: PathService,
+    private readonly pathService: AgentPathService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -97,14 +98,14 @@ export class UpdaterService implements OnApplicationBootstrap {
       ? nativeImage.createFromPath(path.join(this.pathService.getPathToImages(), 'tray-icon.ico'))
       : nativeImage.createFromPath(path.join(this.pathService.getPathToImages(), 'tray-icon.png'));
 
-    const installUpdateNonfiction = new Notification({
+    const installUpdateNotification = new Notification({
       title: 'New update',
       body: `The update version: ${updateInfo.version} will install automatically. Don\`t close app.`,
       icon,
     });
-    installUpdateNonfiction.show();
+    installUpdateNotification.show();
 
-    setTimeout(() => installUpdateNonfiction.close(), 13000);
+    setTimeout(() => installUpdateNotification.close(), 13000);
   }
 
   private subscribeEvents() {
