@@ -10,7 +10,7 @@
   "publish": {
     "provider": "github",
     "private": false,
-    "token": "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"
+    "token": "token"
   },
   "artifactName": "Marketplace-Agent.${ext}",
   "files": [

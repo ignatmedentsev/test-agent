@@ -39,6 +39,9 @@ Thumbs.db
 /data/
 !/data/config.example.json
 
+/ai-data/*
+!/ai-data/config.example.json
+
 # Logs
 *.log
 

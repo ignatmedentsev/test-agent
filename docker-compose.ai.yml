@@ -1,0 +1,26 @@
+version: "3.1"
+services:
+  ai-agent:
+    image: nanoxmarketplace/ai-agent:1.0.0
+    build:
+      context: .
+      args:
+        - NODE_VERSION=18.15.0-focal
+    ports:
+      - "3007:3007"
+      - "3008:3008"
+      - "9999:9999"
+    volumes:
+      - ai_agent_data:/app/ai-data
+    restart: always
+    secrets:
+      - source: ai-gent-config
+        target: /app/ai-data/config.json
+
+
+secrets:
+  ai-gent-config:
+    file: ./ai-data/config.json
+
+volumes:
+  ai_agent_data:

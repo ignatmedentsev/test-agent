@@ -4,11 +4,23 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "~desktop": [
+      "~desktop-app": [
         "apps/desktop-agent/src"
       ],
-      "~desktop/*": [
+      "~desktop-app/*": [
         "apps/desktop-agent/src/*"
+      ],
+      "~ai-app": [
+        "apps/ai-agent/src"
+      ],
+      "~ai-app/*": [
+        "apps/ai-agent/src/*"
+      ],
+      "~headless-app": [
+        "apps/headless-agent/src"
+      ],
+      "~headless-app/*": [
+        "apps/headless-agent/src/*"
       ],
       "~render/*": [
         "apps/render/app/*"
@@ -30,6 +42,12 @@
       ],
       "~agent/*": [
         "libs/agent/src/*"
+      ],
+      "~ai-agent": [
+        "libs/ai-agent/src"
+      ],
+      "~ai-agent/*": [
+        "libs/ai-agent/src/*"
       ],
       "~electron": [
         "libs/electron/src"

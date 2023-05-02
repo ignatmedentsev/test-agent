@@ -34,6 +34,7 @@ After a build the release appears in the 'releases' folder
 
 ### Desktop application
 
+- ```desktop:prepare-deps``` - prepare dependencies for desktop application (use after npm i)
 - ```desktop:build``` - build desktop application
 - ```desktop:clear``` - delete ``dist/apps/desktop-agent`` folder
 - ```desktop:db:generate``` - generate migration for desktop agent
@@ -54,6 +55,18 @@ After a build the release appears in the 'releases' folder
 - ```headless:start:dev``` - start watch mode NestJS app in watch mode
 - ```headless:start``` - start desktop NestJS app
 
+### Ai application
+
+- ```ai-agent:build:docker``` - build docker image
+- ```ai-agent:build``` - build desktop application
+- ```ai-agent:clear``` - delete ``dist/apps/ai-agent`` folder
+- ```ai-agent:db:generate``` - generate migration for ai-agent agent
+- ```ai-agent:db:migrate``` - run migration for ai-agent agent
+- ```ai-agent:db:revert``` - revert migration for ai-agent agent
+- ```ai-agent:pm2:start``` - start ai-agent agent under pm2
+- ```ai-agent:start:dev``` - start watch mode NestJS app in watch mode
+- ```ai-agent:start``` - start desktop NestJS app
+
 ***
 
 ### Tools
@@ -71,6 +84,9 @@ After a build the release appears in the 'releases' folder
 - ```lint:headless:ci``` - lint containerized app for CI
 - ```lint:headless:fix``` - fix containerized app lint
 - ```lint:headless``` - lint containerized app
+- ```lint:ai-agent:ci``` - lint ai app for CI
+- ```lint:ai-agent:fix``` - fix ai app lint
+- ```lint:ai-agent``` - lint ai app
 - ```lint:libs:ci``` - lint libs for CI
 - ```lint:libs``` - lint libs
 - ```lint:render:fix``` - fix render lint

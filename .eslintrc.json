@@ -91,12 +91,46 @@
         "browser": false
       },
       "files": [
+        "./libs/ai-agent/**/*.ts"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": [
+          "./libs/ai-agent/tsconfig.lib.json"
+        ]
+      },
+      "extends": [
+        "./eslint-default.json"
+      ]
+    },
+    {
+      "env": {
+        "browser": false
+      },
+      "files": [
         "./apps/headless-agent/**/*.ts"
       ],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
         "project": [
           "./apps/headless-agent/tsconfig.app.json"
+        ]
+      },
+      "extends": [
+        "./eslint-default.json"
+      ]
+    },
+    {
+      "env": {
+        "browser": false
+      },
+      "files": [
+        "./apps/ai-agent/**/*.ts"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": [
+          "./apps/ai-agent/tsconfig.app.json"
         ]
       },
       "extends": [

@@ -17,10 +17,8 @@ services:
       - source: agent-config
         target: /app/data/config.json
 
-
 secrets:
   agent-config:
     file: ./data/config.json
-
 volumes:
   agent_data:

@@ -27,6 +27,15 @@
         "tsConfigPath": "apps/headless-agent/tsconfig.app.json"
       }
     },
+    "ai-agent": {
+      "type": "application",
+      "root": "apps/ai-agent",
+      "entryFile": "main",
+      "sourceRoot": "apps/ai-agent/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/ai-agent/tsconfig.app.json"
+      }
+    },
     "common": {
       "type": "library",
       "root": "libs/common",
@@ -61,6 +70,15 @@
       "sourceRoot": "libs/electron/src",
       "compilerOptions": {
         "tsConfigPath": "libs/electron/tsconfig.lib.json"
+      }
+    },
+    "ai-agent-lib": {
+      "type": "library",
+      "root": "libs/ai-agent",
+      "entryFile": "index",
+      "sourceRoot": "libs/ai-agent/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/ai-agent/tsconfig.lib.json"
       }
     }
   }
