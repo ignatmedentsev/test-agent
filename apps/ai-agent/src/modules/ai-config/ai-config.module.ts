@@ -10,14 +10,17 @@ import { AiConfigService } from './ai-config.service';
 @Global()
 @Module({
   imports: [ConfigModule.forRoot({ load: [loadConfiguration] })],
-  providers: [{
-    provide: CoreConfigService,
-    useClass: AiConfigService,
-  },
-  {
-    provide: AiAgentConfigService,
-    useClass: AiConfigService,
-  }],
+  providers: [
+    AiConfigService,
+    {
+      provide: CoreConfigService,
+      useExisting: AiConfigService,
+    },
+    {
+      provide: AiAgentConfigService,
+      useExisting: AiConfigService,
+    },
+  ],
   exports: [CoreConfigService, AiAgentConfigService],
 })
 export class AiConfigModule {}

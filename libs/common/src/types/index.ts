@@ -20,6 +20,7 @@ export type { TOrganizationSettingChange } from './TOrganizationSettingChange';
 export type { TPlatformApiResponse } from './TPlatformApiResponse';
 export type { TPlatformRequestApiPayload } from './TPlatformRequestApiPayload';
 export type { TPlatformSocketEventPayload } from './TPlatformSocketEventPayload';
+export type { TPingResponse } from './TPingResponse';
 export type { TQueueOptions } from './TQueueOptions';
 export type { TRenderSocketEventPayload } from './TRenderSocketEventPayload';
 export type { TRequestPhiPayload } from './TRequestPhiPayload';

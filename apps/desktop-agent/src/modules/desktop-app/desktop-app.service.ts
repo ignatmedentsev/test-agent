@@ -2,17 +2,17 @@
 import { Injectable } from '@nestjs/common';
 
 import { AgentInitService } from '~agent/modules/agent';
-import { OrganizationService } from '~agent/modules/organization';
-import { CoreConfigService } from '~core/services';
+import { AgentApiClientService } from '~agent/modules/agent-api-client';
+import { AgentConfigService } from '~agent/services';
 import { SocketClientService } from '~core/socket';
 
 @Injectable()
 export class DesktopAppService {
   constructor(
     private readonly agentInitService: AgentInitService,
-    private readonly configService: CoreConfigService,
-    private readonly organizationService: OrganizationService,
+    private readonly configService: AgentConfigService,
     private readonly socketClientService: SocketClientService,
+    private readonly agentApiClientService: AgentApiClientService,
   ) {}
 
   public async agentAuth(agentKey: string) {
@@ -23,12 +23,14 @@ export class DesktopAppService {
       throw new Error(`Login failed`);
     }
 
+    const { organizationInfo, userInfo } = await this.agentApiClientService.getOrganizationInfo();
+
     this.socketClientService.connect();
 
     return {
       token: initInfo.key,
-      organizationInfo: this.organizationService.getOrganizationInfo(),
-      userInfo: this.organizationService.getUserInfo(),
+      organizationInfo,
+      userInfo,
     };
   }
 }

@@ -1,22 +1,19 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 import type { IOrganizationInfo, IUserInfo } from '~common/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
-  private organizationInfo: IOrganizationInfo | undefined;
-  private userInfo: IUserInfo | undefined;
+  private readonly organizationInfo = new BehaviorSubject<IOrganizationInfo | undefined>(undefined);
+  private readonly userInfo = new BehaviorSubject<IUserInfo | undefined>(undefined);
 
   public setOrganizationInfo(data: IOrganizationInfo) {
-    this.organizationInfo = data;
-
-    return this.organizationInfo;
+    this.organizationInfo.next(data);
   }
 
   public setUserInfo(data: IUserInfo) {
-    this.userInfo = data;
-
-    return this.userInfo;
+    this.userInfo.next(data);
   }
 
   public getUserInfo() {
@@ -28,7 +25,7 @@ export class OrganizationService {
   }
 
   public clearInfo() {
-    this.organizationInfo = undefined;
-    this.userInfo = undefined;
+    this.organizationInfo.next(undefined);
+    this.userInfo .next(undefined);
   }
 }

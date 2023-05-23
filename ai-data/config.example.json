@@ -38,6 +38,13 @@
       "timeout": 300000
     }
   },
+  "vetAi": {
+    "hostUrl": "https://dx-dev-api-v001-backend.azurewebsites.net",
+    "authKey": "e8de9c76291945ae93b3f72cfb92c563",
+    "subscriptionId": "SUB000000000925",
+    "deviceId": "DVI000000000049",
+    "aiServiceId": "SVC100000000001"
+  },
   "ghostScriptPath": "LOCAL_PATH_TO_GHOSTSCRIPT",
   "aiSendType": "PUSH"
 }

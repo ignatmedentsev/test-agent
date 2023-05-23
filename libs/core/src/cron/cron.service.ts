@@ -29,10 +29,10 @@ export class CronService implements OnModuleInit {
     private readonly logger: LogService,
     private readonly registry: CronRegistry,
     private readonly scheduler: SchedulerRegistry,
-    private readonly сonfigService: CoreConfigService,
+    private readonly configService: CoreConfigService,
   ) {
     logger.setContext(this.constructor.name);
-    this.cronItemProcessEndpoint = `http://localhost:${this.сonfigService.getHttpPort()}${EAgentApiUrl.SYS_CRON_ITEM_PROCESS}`;
+    this.cronItemProcessEndpoint = `http://localhost:${this.configService.getHttpPort()}${EAgentApiUrl.SYS_CRON_ITEM_PROCESS}`;
   }
 
   public onModuleInit() {
@@ -136,7 +136,7 @@ export class CronService implements OnModuleInit {
       try {
         await lastValueFrom(this.http.post(this.cronItemProcessEndpoint, {
           name,
-          secretKey: this.сonfigService.getSecretKeyForInternalRequest(),
+          secretKey: this.configService.getSecretKeyForInternalRequest(),
         }));
       } catch (error: any) {
         this.logger.error(`Cron ${name}: API failed: ${JSON.stringify(error.response?.data ?? (error.stack ?? error.message))}`);

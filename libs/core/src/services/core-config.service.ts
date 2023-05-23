@@ -7,6 +7,9 @@ import { EPacsFileUploaderType } from '~common/enums';
 import type { IHttpRetryOptions, IPacsOptions, IPacsServer, IStorescu } from '~common/interfaces';
 import type { TQueueOptions } from '~common/types';
 
+/**
+ * Use only in core module
+ */
 export abstract class CoreConfigService {
   protected key: string;
   protected secretKeyForInternalRequest: string; // Using for internal api call

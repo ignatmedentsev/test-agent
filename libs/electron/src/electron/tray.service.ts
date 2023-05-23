@@ -36,6 +36,12 @@ export class TrayService implements OnApplicationBootstrap {
     click: () => this.electronAppService.createWindow(),
   };
 
+  private readonly showApp: MenuItemConstructorOptions = {
+    id: 'open',
+    label: `Show Agent`,
+    click: () => this.electronAppService.createWindow(),
+  };
+
   private readonly logout: MenuItemConstructorOptions = {
     id: 'logout',
     label: `Logout`,
@@ -45,7 +51,7 @@ export class TrayService implements OnApplicationBootstrap {
   private readonly checkUpdate: MenuItemConstructorOptions = {
     id: 'checkUpdate',
     label: `Check update`,
-    click: async () => this.updaterService.checkForUpdates(),
+    click: async () => this.updaterService.checkForUpdates(true),
   };
 
   constructor(
@@ -85,6 +91,7 @@ export class TrayService implements OnApplicationBootstrap {
       this.isLoggedIn ? this.logout : this.login,
       this.separatorItem,
       ...this.additionalMenuItems,
+      this.showApp,
       this.checkUpdate,
       this.appVersion(),
       this.separatorItem,

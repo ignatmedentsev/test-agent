@@ -16,14 +16,17 @@ export class HeadlessConfigModule {
       module: HeadlessConfigModule,
       global: true,
       imports: [ConfigModule.forRoot({ load: [loadConfiguration] })],
-      providers: [{
-        provide: CoreConfigService,
-        useClass: HeadlessConfigService,
-      },
-      {
-        provide: AgentConfigService,
-        useClass: HeadlessConfigService,
-      }],
+      providers: [
+        HeadlessConfigService,
+        {
+          provide: CoreConfigService,
+          useExisting: HeadlessConfigService,
+        },
+        {
+          provide: AgentConfigService,
+          useExisting: HeadlessConfigService,
+        },
+      ],
       exports: [CoreConfigService, AgentConfigService],
     };
   }

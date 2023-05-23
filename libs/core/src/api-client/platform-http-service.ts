@@ -36,8 +36,9 @@ export class PlatformHttpService extends HttpService implements OnModuleInit {
     this.axiosRef.interceptors.response.use(
       undefined,
       async (error: AxiosError<any>) => {
-        if (error?.status === 401 || error?.status === 403) {
+        if (error?.response?.status === 401 || error?.response?.status === 403) {
           await this.authService.logout();
+          await this.configService.setKey('');
         }
 
         throw error;
@@ -46,10 +47,10 @@ export class PlatformHttpService extends HttpService implements OnModuleInit {
   }
 
   protected addRequestAuthInterceptor() {
-    const key = this.configService.getKey();
-
     this.axiosRef.interceptors.request.use(
       (config) => {
+        const key = this.configService.getKey();
+
         if (config.headers && key) {
           config.headers.agentKey = `Bearer ${key}`;
         }

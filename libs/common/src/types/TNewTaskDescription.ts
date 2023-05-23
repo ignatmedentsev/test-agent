@@ -5,6 +5,7 @@ import type { ETaskStatus, ETaskType } from '~common/enums/task.enum';
 import type { IPacsServer } from '~common/interfaces';
 
 import type { TCheckLocalFileExistenceTaskPayload } from './TCheckLocalFileExistenceTaskPayload';
+import type { TPingResponse } from './TPingResponse';
 import type { TRequestPhiPayload } from './TRequestPhiPayload';
 import type { TRequestStudyNotesPayload } from './TRequestStudyNotesPayload';
 import type { TSendPlatformDicomPayload, TSendLocalDicomPayload } from './TSendDicomPayload';
@@ -36,7 +37,7 @@ never
 
 export type TTaskResponsePayloadType<T = ETaskType> =
   T extends ETaskType.CHECK_LOCAL_FILE_EXISTENCE ? boolean :
-  T extends ETaskType.CHECK_PACS_SERVER_CONNECTION ? { message: string, isError: boolean } :
+  T extends ETaskType.CHECK_PACS_SERVER_CONNECTION ? TPingResponse :
   T extends ETaskType.REQUEST_PHI ? PhiPlatformDto[] :
   T extends ETaskType.UPDATE_PHI_DATA ? void :
   T extends ETaskType.REQUEST_STUDY_NOTES ? TStudyNotes :

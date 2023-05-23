@@ -19,9 +19,13 @@ export class AppInitService {
     private readonly router: Router,
   ) {
     this.socketService.on(ERenderSocketEventType.REFRESH_AGENT_KEY, async () => {
-      this.authService.logout();
-      this.organizationService.clearInfo();
-      await this.router.navigate(['']);
+      await this.logout();
+    });
+    this.socketService.on(ERenderSocketEventType.ORGANIZATION_CHANGED, (organizationInfo) => {
+      this.organizationService.setOrganizationInfo(organizationInfo);
+    });
+    this.socketService.on(ERenderSocketEventType.USER_CHANGED, (userInfo) => {
+      this.organizationService.setUserInfo(userInfo);
     });
   }
 
@@ -30,12 +34,11 @@ export class AppInitService {
       const { organizationInfo, userInfo, token } = await lastValueFrom(this.apiService.getOrganizationInfo());
 
       if (!token) {
-        this.authService.logout();
-        this.organizationService.clearInfo();
-        await this.router.navigate(['']);
+        await this.logout();
+      } else {
+        this.authService.setAuth();
       }
 
-      this.authService.setAuthToken(token);
       if (organizationInfo && userInfo) {
         this.organizationService.setOrganizationInfo(organizationInfo);
         this.organizationService.setUserInfo(userInfo);
@@ -43,5 +46,11 @@ export class AppInitService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  private async logout() {
+    this.authService.logout();
+    this.organizationService.clearInfo();
+    await this.router.navigate(['']);
   }
 }

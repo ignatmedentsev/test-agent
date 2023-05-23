@@ -7,8 +7,9 @@ import type EventEmitter from 'events';
 import tls from 'tls';
 
 import { AiAgentConfigService } from '~ai-agent/services';
+import { EAiSendType } from '~common/enums';
 import type { IPacsServer } from '~common/interfaces';
-import type { TSendPlatformDicomPayload } from '~common/types';
+import type { TPingResponse, TSendPlatformDicomPayload } from '~common/types';
 import { LogService } from '~core/log';
 
 import { DcmJsResponseFormatter } from './dcmjs-response-formatter.service';
@@ -90,6 +91,65 @@ export class DicomPushSenderService implements IDicomAiSender {
 
   public async echo(pacsServer: IPacsServer, dimseOptions?: TDimseOptions) {
     await this.performCEcho(pacsServer, dimseOptions);
+  }
+
+  public async pingPacsServer(pacsServer: IPacsServer) {
+    const pingResponse: TPingResponse = {
+      type: 'info',
+      message: `Checking PACS server ${pacsServer.destinationAet}@${pacsServer.host}:${pacsServer.port}`
+      + ` connection is not supported by agent #${pacsServer.agent?.id}`,
+    };
+
+    if (this.configService.getAiSendType() !== EAiSendType.PUSH) {
+      return pingResponse;
+    }
+
+    try {
+      await new Promise<string>((resolve, reject) => {
+        const client = (new Client()) as Client & EventEmitter;
+        const request = new CEchoRequest();
+
+        client.addRequest(request);
+
+        request.on('response', (response: responses.CEchoResponse) => {
+          const status = response.getStatus();
+          if (status === Status.Success) {
+            resolve('');
+          } else {
+            reject(`Unsuccessful response status: ${this.dcmJsResponseFormatter.getStatusDescription(status)}`);
+          }
+        });
+        client.on('associationRejected', (result: TAssociationRejectResult) => {
+          // need only REJECT_REASON_MAP status without result, source
+          reject(`Association Rejected: ${this.dcmJsResponseFormatter.getRejectReason(result.reason)}`);
+        });
+        client.on('networkError', (e: Error) => {
+          // without stack ?
+          reject(`Network error: ${e.message || 'Unknown error'}`);
+        });
+        client.on('error', (e: Error) => {
+          // without stack ?
+          reject(`Error: ${e.message || 'Unknown error'}`);
+        });
+        client.on('closed', () => {
+          reject('Connection closed');
+        });
+
+        const options = this.configService.getStorescuOptions();
+
+        client.send(pacsServer.host, pacsServer.port, pacsServer.sourceAet ?? DEFAULT_SOURCE_AET, pacsServer.destinationAet, options);
+      });
+
+      pingResponse.type = 'success';
+      pingResponse.message = `Connection through agent #${pacsServer.agent?.id} to PACS server `
+      + `${pacsServer.destinationAet}@${pacsServer.host}:${pacsServer.port} with sourceAet: ${pacsServer.sourceAet || ''} was successfully established`;
+    } catch (error) {
+      pingResponse.type = 'error';
+      pingResponse.message = `Connection through agent #${pacsServer.agent?.id} to PACS server `
+      + `${pacsServer.destinationAet}@${pacsServer.host}:${pacsServer.port} with sourceAet: ${pacsServer.sourceAet || ''} was failed with error: ${error as string}`;
+    }
+
+    return pingResponse;
   }
 
   private async performCStore(dataset: Dataset, pacs: IPacsServer, dimseOptions = DEFAULT_DIMSE_OPTIONS) {

@@ -47,12 +47,9 @@ export class VetAiDicomGeneratorService {
       Modality: 'OT',
       ConversionType: 'SI',
       SpecificCharacterSet: 'ISO_IR 192',
-      ImplementationClassUID: '1.2.840.113819.7.1.1997.1.0',
       PatientOrientation: '',
-      TransferSyntaxUID: '1.2.840.10008.1.2.4.50',
       SeriesDescription: 'Vet AI Report',
       SeriesNumber: VET_AI_SERIES_NUMBER,
-      ImplementationVersionName: 'NANOX_MARKETPLACE.1',
       SamplesPerPixel: 3,
       PhotometricInterpretation: 'YBR_FULL_422',
       PlanarConfiguration: 0,
@@ -74,21 +71,9 @@ export class VetAiDicomGeneratorService {
           ],
           vr: EDicomVr.OTHER_BYTE_STRING,
         },
-        ImplementationClassUID: {
-          Value: [
-            '1.2.840.113819.7.1.1997.1.0',
-          ],
-          vr: EDicomVr.UID,
-        },
-        ImplementationVersionName: {
-          Value: [
-            'NANOX_MARKETPLACE.1',
-          ],
-          vr: EDicomVr.SHORT_STRING,
-        },
         MediaStorageSOPClassUID: {
           Value: [
-            '1.2.840.10008.5.1.4.1.1.4',
+            '1.2.840.10008.5.1.4.1.1.7',
           ],
           vr: EDicomVr.UID,
         },
@@ -120,14 +105,11 @@ export class VetAiDicomGeneratorService {
       Modality: 'OT',
       ConversionType: 'SD',
       SpecificCharacterSet: 'ISO_IR 192',
-      ImplementationClassUID: '1.2.826.0.1.3680043.10.854',
       PatientOrientation: '',
-      TransferSyntaxUID: '1.2.840.10008.1.2.1',
       SeriesDescription: 'Vet AI Report',
       SeriesNumber: VET_AI_SERIES_NUMBER,
       MIMETypeOfEncapsulatedDocument: 'application/pdf',
       DocumentTitle: 'Vet AI report',
-      ImplementationVersionName: 'NANOX_MARKETPLACE.1',
       EncapsulatedDocument: pdfBuffer,
       _meta: {
         FileMetaInformationVersion: {
@@ -138,6 +120,19 @@ export class VetAiDicomGeneratorService {
             },
           ],
           vr: EDicomVr.OTHER_BYTE_STRING,
+        },
+        MediaStorageSOPClassUID: {
+          Value: [
+            '1.2.840.10008.5.1.4.1.1.4',
+          ],
+          vr: EDicomVr.UID,
+        },
+
+        TransferSyntaxUID: {
+          Value: [
+            '1.2.840.10008.1.2.1',
+          ],
+          vr: EDicomVr.UID,
         },
       },
       _vrMap: { },
@@ -166,12 +161,9 @@ export class VetAiDicomGeneratorService {
       ContentTime: '',
       Modality: 'SR',
       SpecificCharacterSet: 'ISO_IR 192',
-      ImplementationClassUID: '1.2.40.0.13.1.3',
       PatientOrientation: '',
-      TransferSyntaxUID: '1.2.840.10008.1.2',
       SeriesDescription: 'Vet AI Report',
       SeriesNumber: VET_AI_SERIES_NUMBER,
-      ImplementationVersionName: 'NANOX_MARKETPLACE.1',
       _meta: {
         FileMetaInformationVersion: {
           Value: [
@@ -181,6 +173,18 @@ export class VetAiDicomGeneratorService {
             },
           ],
           vr: EDicomVr.OTHER_BYTE_STRING,
+        },
+        MediaStorageSOPClassUID: {
+          Value: [
+            '1.2.840.10008.5.1.4.1.1.88.11',
+          ],
+          vr: EDicomVr.UID,
+        },
+        TransferSyntaxUID: {
+          Value: [
+            '1.2.840.10008.1.2',
+          ],
+          vr: EDicomVr.UID,
         },
       },
       _vrMap: { },

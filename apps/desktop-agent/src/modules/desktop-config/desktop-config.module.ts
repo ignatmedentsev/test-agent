@@ -16,19 +16,21 @@ export class DesktopConfigModule {
       module: DesktopConfigModule,
       global: true,
       imports: [ConfigModule.forRoot({ load: [loadConfiguration] })],
-      providers: [{
-        provide: CoreConfigService,
-        useClass: DesktopConfigService,
-      },
-      {
-        provide: AgentConfigService,
-        useClass: DesktopConfigService,
-
-      },
-      {
-        provide: DesktopAgentConfigService,
-        useClass: DesktopConfigService,
-      }],
+      providers: [
+        DesktopConfigService,
+        {
+          provide: CoreConfigService,
+          useExisting: DesktopConfigService,
+        },
+        {
+          provide: AgentConfigService,
+          useExisting: DesktopConfigService,
+        },
+        {
+          provide: DesktopAgentConfigService,
+          useExisting: DesktopConfigService,
+        },
+      ],
       exports: [CoreConfigService, DesktopAgentConfigService, AgentConfigService],
     };
   }

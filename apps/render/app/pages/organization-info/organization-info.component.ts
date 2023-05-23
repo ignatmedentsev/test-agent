@@ -1,8 +1,8 @@
 import type { OnInit } from '@angular/core';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 import type { IOrganizationInfo, IUserInfo } from '~common/interfaces';
-import { ApiService } from '~render/services/api.service';
 
 import { OrganizationService } from '../../services/organization.service';
 
@@ -17,33 +17,33 @@ export class OrganizationInfoComponent implements OnInit {
   public userInfo: IUserInfo;
 
   constructor(
-    private readonly apiService: ApiService,
+    private readonly router: Router,
     private readonly organizationService: OrganizationService,
     private readonly cd: ChangeDetectorRef,
   ) {}
 
   public ngOnInit() {
-    const organizationInfo = this.organizationService.getOrganizationInfo();
-    const userInfo = this.organizationService.getUserInfo();
+    this.organizationService.getOrganizationInfo().subscribe(organizationInfo => this.setOrganizationInfo(organizationInfo));
+    this.organizationService.getUserInfo().subscribe(userInfo => this.setUserInfo(userInfo));
+  }
 
-    if (organizationInfo && userInfo) {
-      this.organizationInfo = organizationInfo;
-      this.userInfo = userInfo;
+  private setOrganizationInfo(data: IOrganizationInfo | undefined) {
+    if (!data) {
+      return void this.router.navigate(['']);
     }
 
-    if (!this.organizationInfo && !this.userInfo) {
-      this.apiService.getOrganizationInfo()
-        .subscribe({
-          next: (data) => {
-            this.organizationInfo = this.organizationService.setOrganizationInfo(data.organizationInfo);
-            this.userInfo = this.organizationService.setUserInfo(data.userInfo);
+    this.organizationInfo = data;
 
-            this.cd.detectChanges();
-          },
-          error: (error) => {
-            console.log(error);
-          },
-        });
+    this.cd.detectChanges();
+  }
+
+  private setUserInfo(data: IUserInfo | undefined) {
+    if (!data) {
+      return void this.router.navigate(['']);
     }
+
+    this.userInfo = data;
+
+    this.cd.detectChanges();
   }
 }

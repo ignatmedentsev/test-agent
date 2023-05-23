@@ -21,6 +21,7 @@ import {
 import type { IPacsServer } from '~common/interfaces';
 import type {
   TDicomPatchingData,
+  TPingResponse,
   TSendLocalDicomPayload,
   TSendPlatformDicomPayload,
 } from '~common/types';
@@ -188,6 +189,12 @@ export class DicomSenderService {
   }
 
   public async pingPacsServer(pacsServer: IPacsServer) {
+    const pingResponse: TPingResponse = {
+      type: 'success',
+      message: `Connection through agent #${pacsServer.agent?.id} to PACS server `
+      + `${pacsServer.destinationAet}@${pacsServer.host}:${pacsServer.port} with sourceAet: ${pacsServer.sourceAet || ''} was successfully established`,
+    };
+
     try {
       await new Promise<string>((resolve, reject) => {
         const client = (new Client()) as Client & EventEmitter;
@@ -224,18 +231,14 @@ export class DicomSenderService {
         client.send(pacsServer.host, pacsServer.port, pacsServer.sourceAet ?? DEFAULT_SOURCE_AET, pacsServer.destinationAet, options);
       });
 
-      return {
-        isError: false,
-        message: `Connection through agent #${pacsServer.agent?.id} to PACS server `
-          + `${pacsServer.destinationAet}@${pacsServer.host}:${pacsServer.port} with sourceAet: ${pacsServer.sourceAet || ''} was successfully established`,
-        };
+      return pingResponse;
     } catch (error) {
-      return {
-        isError: true,
-        message: `Connection through agent #${pacsServer.agent?.id} to PACS server `
-        + `${pacsServer.destinationAet}@${pacsServer.host}:${pacsServer.port} with sourceAet: ${pacsServer.sourceAet || ''} was failed with error: ${error as string}`,
-      };
+      pingResponse.type = 'error';
+      pingResponse.message = `Connection through agent #${pacsServer.agent?.id} to PACS server `
+      + `${pacsServer.destinationAet}@${pacsServer.host}:${pacsServer.port} with sourceAet: ${pacsServer.sourceAet || ''} was failed with error: ${error as string}`;
     }
+
+    return pingResponse;
   }
 
   private async patchDicomWithPhi(dicomFilePath: string, phiDicomData: TDicomPatchingData) {

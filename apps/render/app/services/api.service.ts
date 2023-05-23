@@ -30,10 +30,6 @@ export class ApiService {
     return this.runRequest('POST', url, params);
   }
 
-  // private get<T extends EAgentApiUrl>(url: T, params: any = {}) {
-  //   return this.runRequest('GET', url, params);
-  // }
-
   private runRequest<T extends EAgentApiUrl, K extends Awaited<TAgentApiType<T>>>(type: THttpMethod, url: T, params: any) {
     switch (type) {
       case 'POST':

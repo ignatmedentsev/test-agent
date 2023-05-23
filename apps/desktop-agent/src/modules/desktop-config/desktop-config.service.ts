@@ -22,11 +22,7 @@ export class DesktopConfigService extends DesktopAgentConfigService {
     const configPath = this.agentPathService.getPathToConfig();
     const config = JSON.parse(await fs.promises.readFile(configPath, 'utf-8')) as IDesktopConfig;
 
-    if (!key) {
-      delete config.key;
-    } else {
-      config.key = key;
-    }
+    config.key = key;
 
     await fs.promises.writeFile(configPath, JSON.stringify({ ...config }, undefined, 2), 'utf-8');
 

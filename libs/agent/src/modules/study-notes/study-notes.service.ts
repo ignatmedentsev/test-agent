@@ -155,11 +155,23 @@ export class StudyNotesService {
     const phiForStudyNotes: PhiPlatformDto = {
       dicomData: {
         ...phiPatchingData,
+        [EDicomTag.MODALITY]: {
+          Value: [
+            'OT',
+          ],
+          vr: EDicomVr.CODE_STRING,
+        },
         [EDicomTag.SOP_INSTANCE_UID]: {
           Value: [
             realSopInstanceUid,
           ],
           vr: EDicomVr.UID,
+        },
+        [EDicomTag.SERIES_DESCRIPTION]: {
+          Value: [
+            STUDY_NOTES_SERIES_DESCRIPTION,
+          ],
+          vr: EDicomVr.LONG_STRING,
         },
         [EDicomTag.SERIES_INSTANCE_UID]: {
           Value: [
@@ -247,7 +259,6 @@ export class StudyNotesService {
       ContentTime: '',
       ConversionType: 'SI',
       Modality: 'OT',
-      ImplementationClassUID: '1.2.840.113819.7.1.1997.1.0',
       PatientOrientation: '',
       SamplesPerPixel: 3,
       PhotometricInterpretation: 'YBR_FULL_422',
@@ -258,7 +269,6 @@ export class StudyNotesService {
       BitsStored: 8,
       HighBit: 7,
       PixelRepresentation: 0,
-      TransferSyntaxUID: '1.2.840.10008.1.2.4.50',
       LossyImageCompression: '01',
       _meta: {
         FileMetaInformationVersion: {
@@ -270,21 +280,9 @@ export class StudyNotesService {
           ],
           vr: EDicomVr.OTHER_BYTE_STRING,
         },
-        ImplementationClassUID: {
-          Value: [
-            '1.2.840.113819.7.1.1997.1.0',
-          ],
-          vr: EDicomVr.UID,
-        },
-        ImplementationVersionName: {
-          Value: [
-            'NANOX_MARKETPLACE.1',
-          ],
-          vr: EDicomVr.SHORT_STRING,
-        },
         MediaStorageSOPClassUID: {
           Value: [
-            '1.2.840.10008.5.1.4.1.1.4',
+            '1.2.840.10008.5.1.4.1.1.7',
           ],
           vr: EDicomVr.UID,
         },

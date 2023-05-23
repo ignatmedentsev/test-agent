@@ -33,7 +33,7 @@ export class MainComponent {
     this.apiService.agentAuth(this.agentKey)
       .subscribe({
         next: (data) => {
-          this.authService.setAuthToken(data.token);
+          this.authService.setAuth();
           this.organizationService.setOrganizationInfo(data.organizationInfo);
           this.organizationService.setUserInfo(data.userInfo);
           void this.router.navigate(['organization-info']);

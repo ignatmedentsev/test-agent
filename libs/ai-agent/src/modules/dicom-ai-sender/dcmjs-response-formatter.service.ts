@@ -76,15 +76,15 @@ export class DcmJsResponseFormatter {
     return JSON.stringify(parts);
   }
 
+  public getRejectReason(reason: number) {
+    return REJECT_REASON_MAP[reason] || reason.toString(16);
+  }
+
   private getResultDescription(result: number) {
     return RESULT_DESCRIPTION_MAP[result] || result.toString(16);
   }
 
   private getSource(source: number) {
     return SOURCE_DESCRIPTION_MAP[source] || source.toString(16);
-  }
-
-  private getRejectReason(reason: number) {
-    return REJECT_REASON_MAP[reason] || reason.toString(16);
   }
 }

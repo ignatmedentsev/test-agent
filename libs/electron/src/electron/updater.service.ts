@@ -44,13 +44,17 @@ export class UpdaterService implements OnApplicationBootstrap {
     }
   }
 
-  public async checkForUpdates() {
+  public async checkForUpdates(showNotification = false) {
     this.logger.debug('Check update start');
 
     try {
-      const updateData = await this.autoUpdater.checkForUpdates();
+      const updateData = await this.fetchUpdate();
 
-      if (!updateData) {
+      if (!updateData || app.getVersion() === updateData.updateInfo.version) {
+        if (showNotification) {
+          this.showActualVersion();
+        }
+
         return;
       }
 
@@ -94,18 +98,19 @@ export class UpdaterService implements OnApplicationBootstrap {
   }
 
   private showUpdateProcessNotification(updateInfo: UpdateInfo) {
-    const icon = process.platform === 'win32'
-      ? nativeImage.createFromPath(path.join(this.pathService.getPathToImages(), 'tray-icon.ico'))
-      : nativeImage.createFromPath(path.join(this.pathService.getPathToImages(), 'tray-icon.png'));
-
-    const installUpdateNotification = new Notification({
+    this.showNotification({
       title: 'New update',
       body: `The update version: ${updateInfo.version} will install automatically. Don\`t close app.`,
-      icon,
+      time: 13000,
     });
-    installUpdateNotification.show();
+  }
 
-    setTimeout(() => installUpdateNotification.close(), 13000);
+  private showActualVersion() {
+    this.showNotification({
+      title: 'Latest version already installed',
+      body: 'You already have the last version',
+      time: 10000,
+    });
   }
 
   private subscribeEvents() {
@@ -126,5 +131,32 @@ export class UpdaterService implements OnApplicationBootstrap {
     this.autoUpdater.on(EUpdaterEvent.UPDATE_DOWNLOADED, () => {
       setTimeout(() => this.autoUpdater.quitAndInstall(), 1000);
     });
+  }
+
+  private showNotification(info: { title: string, body: string, time: number }) {
+    const icon = process.platform === 'win32'
+      ? nativeImage.createFromPath(path.join(this.pathService.getPathToImages(), 'tray-icon.ico'))
+      : nativeImage.createFromPath(path.join(this.pathService.getPathToImages(), 'tray-icon.png'));
+
+    const installUpdateNotification = new Notification({
+      title: info.title,
+      body: info.body,
+      icon,
+    });
+    installUpdateNotification.show();
+
+    setTimeout(() => installUpdateNotification.close(), info.time);
+  }
+
+  private async fetchUpdate() {
+    try {
+      return await this.autoUpdater.checkForUpdates();
+    } catch (error) {
+      if ((error as any).code === 'ERR_UPDATER_LATEST_VERSION_NOT_FOUND') {
+        return null;
+      }
+
+      throw error;
+    }
   }
 }

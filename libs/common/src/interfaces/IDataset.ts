@@ -12,14 +12,13 @@ export interface IDataset {
   ConversionType: string;
   DeviceSerialNumber: string;
   DocumentTitle: string;
+  EncapsulatedDocument?: ArrayBufferLike;
   HighBit: number;
-  ImplementationClassUID: string;
   InstanceNumber: number;
   InstitutionName: string;
-  ImplementationVersionName: string;
   LossyImageCompression: string;
-  Modality: string;
   MIMETypeOfEncapsulatedDocument: string;
+  Modality: string;
   PatientBirthDate: string;
   PatientID: string;
   PatientName: string;
@@ -27,7 +26,6 @@ export interface IDataset {
   PatientSex: string;
   PhotometricInterpretation: string;
   PixelData?: ArrayBufferLike;
-  EncapsulatedDocument?: ArrayBufferLike;
   PixelRepresentation: number;
   PlanarConfiguration: number;
   ProtocolName: string;
@@ -50,7 +48,6 @@ export interface IDataset {
   StudyID: string;
   StudyInstanceUID: string;
   StudyTime: string;
-  TransferSyntaxUID: string;
   _meta: IMeta;
   _vrMap: IVRMap;
 }
@@ -63,8 +60,6 @@ export interface IReferringPhysicianIdentificationSequence {
 
 interface IMeta {
   FileMetaInformationVersion: IDicomAttributeJsonModel;
-  ImplementationClassUID: IDicomAttributeJsonModel;
-  ImplementationVersionName: IDicomAttributeJsonModel;
   MediaStorageSOPClassUID: IDicomAttributeJsonModel;
   MediaStorageSOPInstanceUID: IDicomAttributeJsonModel;
   TransferSyntaxUID: IDicomAttributeJsonModel;

@@ -106,7 +106,7 @@ export class OrganizationService implements OnApplicationBootstrap, OnApplicatio
   public setOrganizationInfo(organizationInfo: IOrganizationInfo) {
     this.organizationInfo = organizationInfo;
 
-    this.socketService.emit(ERenderSocketEventType.ORGANIZATION_CHANGED, organizationInfo);
+    this.socketService.server.emit(ERenderSocketEventType.ORGANIZATION_CHANGED, organizationInfo);
   }
 
   public getEmail() {
@@ -152,7 +152,7 @@ export class OrganizationService implements OnApplicationBootstrap, OnApplicatio
   public setUserInfo(userInfo: IUserInfo) {
     this.userInfo = userInfo;
 
-    this.socketService.emit(ERenderSocketEventType.USER_CHANGED, userInfo);
+    this.socketService.server.emit(ERenderSocketEventType.USER_CHANGED, userInfo);
 
     return this.userInfo;
   }
