@@ -8,7 +8,7 @@
     "email": "support@mdw.io"
   },
   "homepage": "https://mdw.io/",
-  "repository": "https://github.com/MDWio/marketplace-agent-release",
+  "repository": "https://github.com/ignatmedentsev/test-agent",
   "description": "Client for Nanox Marketplace",
   "scripts": {
     "asar:extract:linux": "npm exec asar extract \"./release/linux-unpacked/resources/app.asar\" \"./asar-src\"",
